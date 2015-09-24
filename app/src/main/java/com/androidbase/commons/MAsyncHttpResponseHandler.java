@@ -1,9 +1,9 @@
-package com.commons.support.http;
+package com.androidbase.commons;
 
 import android.support.annotation.Nullable;
 
 import com.alibaba.fastjson.JSON;
-import com.commons.support.entity.Result;
+import com.androidbase.entity.Result;
 import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.apache.http.Header;

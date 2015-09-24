@@ -394,8 +394,5 @@ public class Utility {
         return cal.getActualMaximum(Calendar.DATE);
     }
 
-//    public static Object getInstance(Class clazz){
-//
-//    }
 
 }

@@ -53,9 +53,7 @@ public abstract class MAsyncHttpResponseHandler extends TextHttpResponseHandler 
 //    }
 
     public abstract void onMSuccess(int statusCode, Header[] headers, String responseString, Result result);
-
     public abstract void onMFailure(int statusCode, Header[] headers, String responseString, @Nullable Result result, @Nullable Throwable throwable);
-
     /**
      * 成功失败都会执行的操作，如关闭加载动画，都重写此方法
      */

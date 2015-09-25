@@ -18,7 +18,6 @@ public class AllConfig {
 
 
         //init others
-
 //        //初始化talkingData
 //        TCAgent.init(context);
 //        TCAgent.setReportUncaughtExceptions(true);

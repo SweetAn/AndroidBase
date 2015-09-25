@@ -6,7 +6,7 @@ import android.content.Context;
 
 public class MApplication extends Application {
 
-    private Context context;
+    private static Context context;
 
     @Override
     public void onCreate() {
@@ -15,7 +15,10 @@ public class MApplication extends Application {
         this.context = this;
 
         AllConfig.init(this);
+    }
 
+    public static Context getAppContext(){
+        return context;
     }
 
 }

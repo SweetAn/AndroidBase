@@ -1,4 +1,4 @@
-package com.commons.support.log;
+package com.androidbase.commons;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -8,8 +8,11 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.widget.Toast;
 
+import com.androidbase.MApplication;
 import com.commons.support.R;
+import com.commons.support.log.LogUtil;
 
 import org.apache.http.HttpException;
 
@@ -42,7 +45,7 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 	public final static byte TYPE_IO	 	= 0x06;
 	public final static byte TYPE_RUN	 	= 0x07;
 	public final static byte TYPE_JSON      = 0x08;
-	
+
 	private byte type;
 	private int code;
 	
@@ -52,7 +55,19 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 	private AppException(){
 		this.mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
 	}
-	
+
+	public AppException(String detailMessage) {
+		super(detailMessage);
+		if (Debug) {
+			saveErrorLog(this);
+			printStackTrace();
+		}
+	}
+
+	public AppException(String url, int code) {
+		this("request === " + url + " === appear " + code + " error!");
+	}
+
 	private AppException(byte type, int code, Exception excp) {
 		super(excp);
 		this.type = type;
@@ -121,7 +136,10 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 		}
 		return err;
 	}
-	
+
+	public void saveErrorLog() {
+		saveErrorLog(this);
+	}
 	/**
 	 * 保存异常日志
 	 * @param excp
@@ -136,7 +154,7 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 			//判断是否挂载了SD卡
 			String storageState = Environment.getExternalStorageState();		
 			if(storageState.equals(Environment.MEDIA_MOUNTED)){
-				savePath = Environment.getExternalStorageDirectory() + "/log/";
+				savePath = Environment.getExternalStorageDirectory() + "/"+Constants.BASE_DIR_NAME+"/log/";
 				File file = new File(savePath);
 				if(!file.exists()){
 					file.mkdirs();
@@ -153,7 +171,7 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 			}
 			fw = new FileWriter(logFile,true);
 			pw = new PrintWriter(fw);
-			pw.println("--------------------"+(DateFormat.getDateTimeInstance().format(new Date()))+"---------------------");
+			pw.println("\n--------------------" + (DateFormat.getDateTimeInstance().format(new Date())) + "---------------------");
 			excp.printStackTrace(pw);
 			pw.close();
 			fw.close();
@@ -163,7 +181,7 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 			if(pw != null){ pw.close(); } 
 			if(fw != null){ try { fw.close(); } catch (IOException e) { }}
 		}
-		excp.printStackTrace();
+//		excp.printStackTrace();
 	}
 	
 	public static AppException http(int code) {
@@ -172,6 +190,10 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 	
 	public static AppException http(Exception e) {
 		return new AppException(TYPE_HTTP_ERROR, 0 ,e);
+	}
+
+	public static AppException http(int code, Exception e) {
+		return new AppException(TYPE_HTTP_ERROR, code ,e);
 	}
 
 	public static AppException socket(Exception e) {
@@ -220,13 +242,25 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 	public static AppException getAppExceptionHandler(){
 		return new AppException();
 	}
-	
+
+	/**
+	 * UncaughtExceptionHandler：线程未捕获异常控制器是用来处理未捕获异常的。
+	 * 如果程序出现了未捕获异常默认情况下则会出现强行关闭对话框
+	 * 实现该接口并注册为程序中的默认未捕获异常处理
+	 * 这样当未捕获异常发生时，就可以做些异常处理操作
+	 * 例如：收集异常信息，发送错误报告 等。
+	 * <p>
+	 * UncaughtException处理类,当程序发生Uncaught异常的时候,由该类来接管程序,并记录发送错误报告.
+	 * @param thread
+	 * @param ex
+	 */
 	@Override
 	public void uncaughtException(Thread thread, Throwable ex) {
 		if(!handleException(ex) && mDefaultHandler != null) {
 			LogUtil.log("APPException.uncaughtException....");
+			Toast.makeText(MApplication.getAppContext(), "uncaughtException", Toast.LENGTH_SHORT).show();
 			// 这里关闭应用
-			mDefaultHandler.uncaughtException(thread, ex);
+//			mDefaultHandler.uncaughtException(thread, ex);
 		}
 	}
 	/**
@@ -239,7 +273,7 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 			return false;
 		}
 		
-		final Context context = null;//AppManager.getAppManager().currentActivity();
+		final Context context = MApplication.getAppContext();//AppManager.getAppManager().currentActivity();
 		
 		if(context == null) return false;
 		

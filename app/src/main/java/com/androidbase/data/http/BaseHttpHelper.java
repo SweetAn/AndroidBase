@@ -20,7 +20,9 @@ public class BaseHttpHelper {
     private volatile static BaseHttpHelper httpHelper;
     private static Context context;
 
-    public BaseHttpHelper(){}
+    public BaseHttpHelper() {
+    }
+
     public static BaseHttpHelper initInstance(Context context) {
         if (httpHelper == null) {
             synchronized (BaseHttpHelper.class) {
@@ -32,20 +34,14 @@ public class BaseHttpHelper {
         return httpHelper;
     }
 
-    public static BaseHttpHelper getInstance(){
+    public static BaseHttpHelper getInstance() {
         return httpHelper;
     }
 
 
-
-    public AsyncHttpClient getClient() {
+    public static AsyncHttpClient getClient() {
         AsyncHttpClient client = new AsyncHttpClient();
         client.setTimeout(15 * 1000);
-        client.addHeader("os", "1");
-        client.addHeader("os", "1");
-        client.addHeader("os", "1");
-        client.addHeader("os", "1");
-        client.addHeader("os", "1");
         client.addHeader("os", "1");
         client.setLoggingEnabled(false);
         return client;
@@ -54,29 +50,37 @@ public class BaseHttpHelper {
 
     // ----------- 基础访问 START ----------//
 
-    public void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+    public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         getClient().get(url, params, responseHandler);
     }
 
-    private void get(String url, AsyncHttpResponseHandler responseHandler) {
+    public void get(String url, AsyncHttpResponseHandler responseHandler) {
         getClient().get(url, responseHandler);
     }
 
-    private void post(String url, StringEntity entity, AsyncHttpResponseHandler responseHandler) {
+    public static void post(String url, StringEntity entity, AsyncHttpResponseHandler responseHandler) {
         entity.setContentType("application/json;charset=UTF-8");
         getClient().post(context, url, entity, contentType, responseHandler);
     }
 
-    private void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+    public static void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         getClient().post(context, url, params, responseHandler);
     }
 
-    private void post(String url, AsyncHttpResponseHandler responseHandler) {
+    public static void post(String url, AsyncHttpResponseHandler responseHandler) {
         getClient().post(url, responseHandler);
     }
 
-    public void cancelAllRequests() {
+    public static void cancelAllRequests() {
         getClient().cancelAllRequests(true);
+    }
+
+
+    //TODO 这个方法还要考虑怎么做方便点
+    public static RequestParams getParams(Class<?>... values) {
+        RequestParams params = new RequestParams();
+        params.put("","");
+        return params;
     }
 
 

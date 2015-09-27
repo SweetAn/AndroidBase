@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
+import com.commons.support.log.LogUtil;
 import com.commons.support.util.DialogUtil;
 import com.commons.support.widget.TitleBar;
 
@@ -51,33 +52,23 @@ public class BaseActivity extends Activity {
         return new JSONObject(new String(bytes));
     }
 
-    public void loadStart(boolean showFooter) {
+    public void requestStart() {
         if (isLoading) {
             return;
         }
-        if (showFooter) {
-            footer.setVisibility(View.VISIBLE);
-        } else {
-            if (loadingDialog != null) {
-                // loadingDialog.show();
-            }
-        }
+        loadingDialog.show();
         isLoading = true;
     }
 
-    public void loadEnd() {
+    public void requestEnd() {
         isLoading = false;
-        if (loadingDialog != null) {
+        if (loadingDialog != null && loadingDialog.isShowing()) {
             loadingDialog.dismiss();
         }
-        footer.setVisibility(View.GONE);
     }
 
-
     public void printLog(String msg) {
-        if (BuildConfig.LOG_DEBUG) {
-            System.out.println(msg);
-        }
+        LogUtil.log(msg);
     }
 
     public void startActivity(Class mClass) {

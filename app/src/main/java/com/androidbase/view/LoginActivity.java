@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.androidbase.BaseActivity;
 import com.androidbase.R;
+import com.androidbase.presenter.LoginPresenter;
 import com.androidbase.util.CountUtil;
 import com.androidbase.view.iview.ILoginView;
 import com.commons.support.util.DialogUtil;
@@ -36,8 +37,12 @@ public class LoginActivity extends BaseActivity implements ILoginView{
     TextView tvVerifyCode;
     TextView btnNoGetVerCode;
     private int cnt = 60;
-
     private int activateCnt = 0;
+
+    LoginPresenter loginPresenter;
+
+
+
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -61,6 +66,8 @@ public class LoginActivity extends BaseActivity implements ILoginView{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        loginPresenter = new LoginPresenter(this);
 
         setTitle("登录/注册");
 
@@ -213,9 +220,8 @@ public class LoginActivity extends BaseActivity implements ILoginView{
             return;
         }
 
-        loadingDialog.show();
-        isLoading = true;
-
+        requestStart();
+        loginPresenter.login(phone,pas);
 
     }
 
@@ -238,8 +244,6 @@ public class LoginActivity extends BaseActivity implements ILoginView{
         if(isLoading) {
             return;
         }
-        loadingDialog.show();
-        isLoading = true;
 
     }
 
@@ -275,17 +279,15 @@ public class LoginActivity extends BaseActivity implements ILoginView{
     }
 
     @Override
-    public boolean loginWithPas(String phoneNo, String pas) {
-        return false;
+    public void loginSuccess() {
+        //TODO 登录成功后，处理UI逻辑
+        requestEnd();
+        showToast("登录成功！");
     }
 
     @Override
-    public boolean loginWithVerifyCode(String phoneNo, String verifyCode) {
-        return false;
-    }
-
-    @Override
-    public boolean getVerifyCode(String phoneNo) {
-        return false;
+    public void loginFail(String msg) {
+        requestEnd();
+        showToast(msg);
     }
 }

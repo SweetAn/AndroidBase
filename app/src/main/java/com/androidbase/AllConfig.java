@@ -3,6 +3,7 @@ package com.androidbase;
 import android.content.Context;
 
 import com.androidbase.commons.CustomCrashHandler;
+import com.androidbase.data.http.BaseHttpHelper;
 import com.commons.support.db.config.ConfigUtil;
 import com.commons.support.img.ImageLoader;
 
@@ -16,6 +17,10 @@ public class AllConfig {
 
         //init imageLoader
         ImageLoader.init(context);
+
+        //init httpHelper
+        BaseHttpHelper.initInstance(context);
+
 
         //init UncaughtException
         CustomCrashHandler mCustomCrashHandler = CustomCrashHandler.getInstance();

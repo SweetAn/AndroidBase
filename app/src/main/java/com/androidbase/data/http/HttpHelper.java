@@ -1,10 +1,10 @@
 package com.androidbase.data.http;
 
 import com.androidbase.BuildConfig;
-import com.androidbase.commons.MAsyncHttpResponseHandler;
 import com.androidbase.entity.Page;
 import com.commons.support.db.config.ConfigUtil;
 import com.commons.support.log.LogUtil;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 
 /**
  * Created by qianjin on 2015/9/25.
@@ -20,7 +20,7 @@ public class HttpHelper extends BaseHttpHelper {
         //return "http://" + RELEASE_HOST + "/" + path;
     }
 
-    public static void login(String userName, String pas, final MAsyncHttpResponseHandler responseHandler) {
+    public static void login(String userName, String pas, final AsyncHttpResponseHandler responseHandler) {
         LogUtil.log("Call login in HttpHelper");
         Page page = new Page();
         getFaqList(page,responseHandler);
@@ -44,7 +44,7 @@ public class HttpHelper extends BaseHttpHelper {
     }
 
 
-    public static void getFaqList(Page page,MAsyncHttpResponseHandler handler){
+    public static void getFaqList(Page page,AsyncHttpResponseHandler handler){
         //http://api-test.365hr.com:8030/faqlist/257?city_id=257&p=1&st=
         get(initUrl("faqlist/257"),page.getParams(),handler);
     }

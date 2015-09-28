@@ -4,7 +4,9 @@ import android.content.Context;
 
 import com.androidbase.commons.CustomCrashHandler;
 import com.androidbase.data.http.BaseHttpHelper;
+import com.androidbase.data.http.HttpHelper;
 import com.commons.support.db.config.ConfigUtil;
+import com.commons.support.http.httpDns;
 import com.commons.support.img.ImageLoader;
 
 /**
@@ -21,6 +23,10 @@ public class AllConfig {
         //init httpHelper
         BaseHttpHelper.initInstance(context);
 
+        //init httpDns
+        //HttpDns.initHost("");
+        httpDns.initHost(HttpHelper.RELEASE_HOST);
+        httpDns.initHost(HttpHelper.DEV_HOST);
 
         //init UncaughtException
         CustomCrashHandler mCustomCrashHandler = CustomCrashHandler.getInstance();

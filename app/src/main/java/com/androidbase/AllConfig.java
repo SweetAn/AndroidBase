@@ -5,7 +5,7 @@ import android.content.Context;
 import com.androidbase.commons.CustomCrashHandler;
 import com.androidbase.data.http.BaseHttpHelper;
 import com.androidbase.data.http.HttpHelper;
-import com.commons.support.db.config.ConfigUtil;
+import com.commons.support.db.DaoUtil;
 import com.commons.support.http.httpDns;
 import com.commons.support.img.ImageLoader;
 
@@ -14,8 +14,8 @@ import com.commons.support.img.ImageLoader;
  */
 public class AllConfig {
     public static void init(Context context) {
-        //init config db
-        ConfigUtil.init(context);
+        //init db
+        DaoUtil.init(context);
 
         //init imageLoader
         ImageLoader.init(context);

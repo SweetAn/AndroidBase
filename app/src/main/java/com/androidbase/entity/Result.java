@@ -20,6 +20,7 @@ public class Result {
 //    msg: "",
 //    errormsg: ""
 
+    private boolean needRefresh;
 
     private boolean result;
 
@@ -98,5 +99,13 @@ public class Result {
 
     public void setResultCode(String resultCode) {
         this.resultCode = resultCode;
+    }
+
+    public boolean isNeedRefresh() {
+        return needRefresh;
+    }
+
+    public void setNeedRefresh(boolean needRefresh) {
+        this.needRefresh = needRefresh;
     }
 }

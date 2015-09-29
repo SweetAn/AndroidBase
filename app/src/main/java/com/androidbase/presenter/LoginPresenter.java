@@ -22,7 +22,6 @@ public class LoginPresenter {
     }
 
 
-
     public void login(String userName,String pas){
         loginModel.login(userName, pas, new MAsyncHttpResponseHandler() {
             @Override

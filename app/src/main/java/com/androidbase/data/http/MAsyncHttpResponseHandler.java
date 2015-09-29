@@ -1,9 +1,13 @@
 package com.androidbase.data.http;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.androidbase.entity.Result;
+import com.commons.support.db.cache.Cache;
+import com.commons.support.db.cache.CacheUtil;
+import com.commons.support.entity.JSONUtil;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
@@ -14,28 +18,52 @@ import org.apache.http.Header;
  */
 public abstract class MAsyncHttpResponseHandler extends AsyncHttpResponseHandler {
 
+    private String cacheKey;
+    private String cacheStr;
+    private long timeout;
+
+    public void initCache(String cacheKey) {
+        timeout = 0;
+        this.cacheKey = cacheKey;
+    }
+
+    public void initCache(String cacheKey, long timeout) {
+        this.timeout = timeout;
+        this.cacheKey = cacheKey;
+    }
+
     @Override
     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+        MRequestEnd();
         try {
             Result baseResult = JSON.parseObject(responseBody, Result.class);
             if (baseResult != null) {
-                if(baseResult.isResult()) {
-                    MRequestEnd();
-                    onMSuccess(baseResult);
-                    onMSuccess(statusCode, headers, responseBody, baseResult);
+                if (baseResult.isResult()) {
+                    saveCache(baseResult);
+                    if (TextUtils.isEmpty(cacheStr)) {
+                        onMSuccess(baseResult);
+                        onMSuccess(statusCode, headers, responseBody, baseResult);
+                    } else {
+                        if (!cacheStr.equals(new String(responseBody))) {
+                            baseResult.setNeedRefresh(true);
+                            onMSuccess(baseResult);
+                            onMSuccess(statusCode, headers, responseBody, baseResult);
+                        } else {
+                            baseResult.setNeedRefresh(false);
+                            onMSuccess(baseResult);
+                            onMSuccess(statusCode, headers, responseBody, baseResult);
+                        }
+                    }
                 } else {
-                    MRequestEnd();
                     onMFailure(statusCode, baseResult, null);
                     onMFailure(statusCode, headers, responseBody, baseResult, null);
                 }
             } else { // 几乎不存在
-                MRequestEnd();
                 onMFailure(statusCode, null, null);
                 onMFailure(statusCode, headers, responseBody, null, null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            MRequestEnd();
             onMFailure(statusCode, null, e);
             onMFailure(statusCode, headers, responseBody, null, e);
         }
@@ -48,13 +76,42 @@ public abstract class MAsyncHttpResponseHandler extends AsyncHttpResponseHandler
         onMFailure(statusCode, headers, responseBody, null, throwable);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!TextUtils.isEmpty(cacheKey)) {
+            cacheStr = CacheUtil.getCacheValue(cacheKey);
+            if (!TextUtils.isEmpty(cacheStr)) {
+                Result result = JSONUtil.parseObject(cacheStr, Result.class);
+                onMSuccess(result);
+            }
+        }
+    }
+
+    public void saveCache(Result result) {
+        if (!TextUtils.isEmpty(cacheKey)) {
+            Cache cache = new Cache();
+            cache.setKey(cacheKey);
+            cache.setTimeout(timeout);
+            cache.setCurrentTime(System.currentTimeMillis());
+            cache.setValue(JSONUtil.toJSONString(result));
+            CacheUtil.save(cache);
+        }
+    }
+
+
     public abstract void onMSuccess(Result result);
+
     public abstract void onMFailure(int statusCode, @Nullable Result result, @Nullable Throwable throwable);
 
-    public void onMSuccess(int statusCode, Header[] headers, byte[] responseBody, Result result){}
-    public void onMFailure(int statusCode, Header[] headers, byte[] responseBody, @Nullable Result result, @Nullable Throwable throwable){}
+    public void onMSuccess(int statusCode, Header[] headers, byte[] responseBody, Result result) {
+    }
+    public void onMFailure(int statusCode, Header[] headers, byte[] responseBody, @Nullable Result result, @Nullable Throwable throwable) {
+    }
+
     /**
      * 成功失败都会执行的操作，如关闭加载动画，都重写此方法
      */
-    public void MRequestEnd(){}
+    public void MRequestEnd() {
+    }
 }

@@ -7,6 +7,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.entity.StringEntity;
 
 
@@ -53,7 +54,10 @@ public class BaseHttpHelper {
 
 
     public static AsyncHttpClient getClient() {
-        AsyncHttpClient client = new AsyncHttpClient();
+
+        SchemeRegistry schemeRegistry = new SchemeRegistry();
+
+        AsyncHttpClient client = new AsyncHttpClient(8030);
         client.setTimeout(20 * 1000);
         //client.setUserAgent(encode("点米社保通") + " " + Utility.getAppVersionName(context) + "," + Utility.getAppVersionCode(context) + " (Android; Android " + mDeviceUtil.getReleaseVersion() + "; zh_CN) EEBoMobileAgent_Android");
         //client.setUserAgent("EEBoMobileAgent_Android");
@@ -61,7 +65,7 @@ public class BaseHttpHelper {
         client.addHeader("ver", Utility.getAppVersionName(context) + "," + Utility.getAppVersionCode(context));
         //client.addHeader("conn", Connectivity.getConnectionMode(context));
         client.addHeader("mfg", "EB009");
-        //client.addHeader("host", DEV_HOST);
+        client.addHeader("Host", "api-test.365hr.com:8030");
         client.addHeader("os", "1");
         client.addHeader("x-token", getXToken());
         client.setLoggingEnabled(false);
@@ -86,7 +90,7 @@ public class BaseHttpHelper {
 
     public static void post(String url, StringEntity entity, AsyncHttpResponseHandler responseHandler) {
         entity.setContentType("application/json;charset=UTF-8");
-        getClient().post(context, url, entity, contentType, responseHandler);
+        //getClient().post(context, url, entity, contentType, responseHandler);
     }
 
     public static void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {

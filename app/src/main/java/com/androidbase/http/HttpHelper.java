@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 
+
 /**
  * Created by qianjin on 2015/9/23.
  */
@@ -43,11 +44,6 @@ public class HttpHelper {
     public AsyncHttpClient getClient() {
         AsyncHttpClient client = new AsyncHttpClient();
         client.setTimeout(15 * 1000);
-        client.addHeader("os", "1");
-        client.addHeader("os", "1");
-        client.addHeader("os", "1");
-        client.addHeader("os", "1");
-        client.addHeader("os", "1");
         client.addHeader("os", "1");
         client.setLoggingEnabled(false);
         return client;
@@ -100,7 +96,7 @@ public class HttpHelper {
 
     private void post(String url, StringEntity entity, AsyncHttpResponseHandler responseHandler) {
         entity.setContentType("application/json;charset=UTF-8");
-        getClient().post(context, url, entity, contentType, responseHandler);
+        //getClient().post(context, url, entity, contentType, responseHandler);
     }
 
     private void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {

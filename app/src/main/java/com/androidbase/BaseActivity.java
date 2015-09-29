@@ -8,6 +8,9 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
+import com.androidbase.adapter.BaseAdapter;
+import com.androidbase.entity.Page;
+import com.androidbase.entity.Result;
 import com.commons.support.log.LogUtil;
 import com.commons.support.util.DialogUtil;
 import com.commons.support.widget.TitleBar;
@@ -87,5 +90,17 @@ public class BaseActivity extends Activity {
         TitleBar titleBar = (TitleBar) findViewById(R.id.v_title);
         return titleBar;
     }
+
+    public void showListView(Page page,Result result,BaseAdapter adapter) {
+        if (page.isRefresh()) {
+            com.androidbase.util.LogUtil.log("refresh,need refresh is :" + result.isNeedRefresh());
+            if(result.isNeedRefresh()) {
+                adapter.refresh(page.getDataList());
+            }
+        } else {
+            adapter.loadMore(page.getDataList());
+        }
+    }
+
 
 }

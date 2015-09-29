@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.androidbase.entity.Result;
 import com.androidbase.util.LogUtil;
 import com.commons.support.db.cache.Cache;
@@ -13,6 +14,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;
 
+
 /**
  * 只能用于自家服务端返回的数据处理
  * Created by Wang on 2015/9/22.
@@ -20,7 +22,7 @@ import org.apache.http.Header;
 public abstract class MAsyncHttpResponseHandler extends AsyncHttpResponseHandler {
 
     private String cacheKey;
-    private String cacheStr;
+    private String cacheValue;
     private long timeout;
 
     public void initCache(String cacheKey) {
@@ -43,15 +45,19 @@ public abstract class MAsyncHttpResponseHandler extends AsyncHttpResponseHandler
 
                     saveCache(baseResult);
 
-                    if (TextUtils.isEmpty(cacheStr)) {
+                    if (TextUtils.isEmpty(cacheValue)) {
+
+                        baseResult.setNeedRefresh(true);
                         onMSuccess(baseResult);
                         onMSuccess(statusCode, headers, responseBody, baseResult);
-                    } else {
-//                        if (!cacheStr.equals(new String(responseBody))) {
 
-                        if (!cacheStr.equals(JSONUtil.toJSONString(baseResult))) {
+                    } else {
+//                        if (!cacheValue.equals(new String(responseBody))) {
+
+                        if (!isDataEqualsCache(baseResult)) {
+
                             LogUtil.log("get data and cache is not equals, need refresh!");
-                            LogUtil.log("cache  str:" + cacheStr);
+                            LogUtil.log("cache  str:" + cacheValue);
                             LogUtil.log("result str:" + JSONUtil.toJSONString(baseResult));
 
                             baseResult.setNeedRefresh(true);
@@ -60,7 +66,6 @@ public abstract class MAsyncHttpResponseHandler extends AsyncHttpResponseHandler
                         } else {
 
                             LogUtil.log("get data and cache is equals, not need refresh!");
-
                             baseResult.setNeedRefresh(false);
                             onMSuccess(baseResult);
                             onMSuccess(statusCode, headers, responseBody, baseResult);
@@ -92,16 +97,25 @@ public abstract class MAsyncHttpResponseHandler extends AsyncHttpResponseHandler
     public void onStart() {
         super.onStart();
         if (!TextUtils.isEmpty(cacheKey)) {
-            cacheStr = CacheUtil.getCacheValue(cacheKey);
-            if (!TextUtils.isEmpty(cacheStr)) {
-                Result result = JSONUtil.parseObject(cacheStr, Result.class);
+            cacheValue = CacheUtil.getCacheValue(cacheKey);
+            if (!TextUtils.isEmpty(cacheValue)) {
+                Result result = JSONUtil.parseObject(cacheValue, Result.class);
                 result.setNeedRefresh(true);
                 onMSuccess(result);
             }
         }
     }
 
-    public void saveCache(Result result) {
+    private boolean isDataEqualsCache(Result dataResult) {
+        Result cacheResult = JSONUtil.parseObject(cacheValue, Result.class);
+        JSONObject cacheObj = JSON.parseObject(cacheResult.getData());
+        JSONObject resultObj = JSON.parseObject(dataResult.getData());
+        cacheObj.remove("sincetime");
+        resultObj.remove("sincetime");
+        return JSONUtil.toJSONString(cacheObj).equals(JSONUtil.toJSONString(resultObj));
+    }
+
+    private void saveCache(Result result) {
         if (!TextUtils.isEmpty(cacheKey)) {
             LogUtil.log("cacheKey is not empty,save cache!");
             Cache cache = new Cache();

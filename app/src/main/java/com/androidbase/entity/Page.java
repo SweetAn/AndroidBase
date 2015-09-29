@@ -63,6 +63,13 @@ public class Page<E> implements Serializable {
             return false;
         }
     }
+    public boolean isNeedCache() {
+        if (currentPage == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public boolean hasMore() {
         if (nextPage <= totalPage && totalPage != 1) {

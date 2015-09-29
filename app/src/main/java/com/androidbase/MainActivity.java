@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.androidbase.commons.AppException;
+import com.androidbase.view.ArticleListActivity;
 import com.androidbase.view.LoginActivity;
 import com.commons.support.db.config.Config;
 import com.commons.support.db.config.ConfigUtil;
@@ -32,6 +33,12 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 startActivity(LoginActivity.class);
+            }
+        });
+        findViewById(R.id.btn_article).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(ArticleListActivity.class);
             }
         });
 

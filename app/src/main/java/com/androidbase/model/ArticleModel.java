@@ -11,10 +11,11 @@ import com.androidbase.util.LogUtil;
 public class ArticleModel {
 
     public void getArticles(Page page,MAsyncHttpResponseHandler handler){
-        handler.initCache(getCacheKey("getArticles"));
+        if(page.isNeedCache()) {
+            handler.initCache(getCacheKey("getArticles"));
+        }
         HttpHelper.getArticleList(page,handler);
     }
-
 
     public String getCacheKey(String key) {
         String cacheKey = getClass().getName() + "-" + key;

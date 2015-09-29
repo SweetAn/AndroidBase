@@ -9,6 +9,7 @@ import com.androidbase.entity.Article;
 import com.androidbase.entity.Page;
 import com.androidbase.entity.Result;
 import com.androidbase.presenter.ArticlePresenter;
+import com.androidbase.util.LogUtil;
 import com.androidbase.view.iview.IArticleView;
 import com.androidbase.widget.ptr.PtrListView;
 
@@ -27,6 +28,9 @@ public class ArticleListActivity extends BaseActivity implements IArticleView{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
+
+        setTitle("资讯");
+
         page = new Page();
         presenter = new ArticlePresenter(this);
         listView = (PtrListView) findViewById(R.id.lv_list);
@@ -45,7 +49,11 @@ public class ArticleListActivity extends BaseActivity implements IArticleView{
         listView.setLoadMore(new PtrListView.OnLoadMore() {
             @Override
             public void onLoadMore() {
-                presenter.getArticles(page);
+                if (page.hasMore()) {
+                    presenter.getArticles(page);
+                } else {
+                    requestEnd();
+                }
             }
         });
 
@@ -57,13 +65,17 @@ public class ArticleListActivity extends BaseActivity implements IArticleView{
         Page<Article> resultPage = result.getPage(Article.class);
         page.initPage(resultPage);
         if (page.isRefresh()) {
-            adapter.refresh(page.getDataList());
+            LogUtil.log("refresh,need refresh is :" + result.isNeedRefresh());
+            if(result.isNeedRefresh()) {
+                adapter.refresh(page.getDataList());
+            }
         } else {
             adapter.loadMore(page.getDataList());
         }
     }
     @Override
     public void getArticlesFail(String msg) {
+        showToast(msg);
     }
 
     @Override

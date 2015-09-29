@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.androidbase.entity.Result;
+import com.androidbase.util.LogUtil;
 import com.commons.support.db.cache.Cache;
 import com.commons.support.db.cache.CacheUtil;
 import com.commons.support.entity.JSONUtil;
@@ -39,16 +40,27 @@ public abstract class MAsyncHttpResponseHandler extends AsyncHttpResponseHandler
             Result baseResult = JSON.parseObject(responseBody, Result.class);
             if (baseResult != null) {
                 if (baseResult.isResult()) {
+
                     saveCache(baseResult);
+
                     if (TextUtils.isEmpty(cacheStr)) {
                         onMSuccess(baseResult);
                         onMSuccess(statusCode, headers, responseBody, baseResult);
                     } else {
-                        if (!cacheStr.equals(new String(responseBody))) {
+//                        if (!cacheStr.equals(new String(responseBody))) {
+
+                        if (!cacheStr.equals(JSONUtil.toJSONString(baseResult))) {
+                            LogUtil.log("get data and cache is not equals, need refresh!");
+                            LogUtil.log("cache  str:" + cacheStr);
+                            LogUtil.log("result str:" + JSONUtil.toJSONString(baseResult));
+
                             baseResult.setNeedRefresh(true);
                             onMSuccess(baseResult);
                             onMSuccess(statusCode, headers, responseBody, baseResult);
                         } else {
+
+                            LogUtil.log("get data and cache is equals, not need refresh!");
+
                             baseResult.setNeedRefresh(false);
                             onMSuccess(baseResult);
                             onMSuccess(statusCode, headers, responseBody, baseResult);
@@ -83,6 +95,7 @@ public abstract class MAsyncHttpResponseHandler extends AsyncHttpResponseHandler
             cacheStr = CacheUtil.getCacheValue(cacheKey);
             if (!TextUtils.isEmpty(cacheStr)) {
                 Result result = JSONUtil.parseObject(cacheStr, Result.class);
+                result.setNeedRefresh(true);
                 onMSuccess(result);
             }
         }
@@ -90,12 +103,15 @@ public abstract class MAsyncHttpResponseHandler extends AsyncHttpResponseHandler
 
     public void saveCache(Result result) {
         if (!TextUtils.isEmpty(cacheKey)) {
+            LogUtil.log("cacheKey is not empty,save cache!");
             Cache cache = new Cache();
             cache.setKey(cacheKey);
             cache.setTimeout(timeout);
             cache.setCurrentTime(System.currentTimeMillis());
             cache.setValue(JSONUtil.toJSONString(result));
             CacheUtil.save(cache);
+        } else {
+            LogUtil.log("cacheKey is empty, do not save cache!");
         }
     }
 
@@ -106,6 +122,7 @@ public abstract class MAsyncHttpResponseHandler extends AsyncHttpResponseHandler
 
     public void onMSuccess(int statusCode, Header[] headers, byte[] responseBody, Result result) {
     }
+
     public void onMFailure(int statusCode, Header[] headers, byte[] responseBody, @Nullable Result result, @Nullable Throwable throwable) {
     }
 

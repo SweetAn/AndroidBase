@@ -2,7 +2,6 @@ package com.androidbase.data.http;
 
 import com.androidbase.BuildConfig;
 import com.androidbase.entity.Page;
-import com.commons.support.db.config.ConfigUtil;
 import com.commons.support.log.LogUtil;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
@@ -13,11 +12,11 @@ public class HttpHelper extends BaseHttpHelper {
 
     public static String initUrl(String path) {
         if (BuildConfig.DEBUG) {
-            return "http://" + ConfigUtil.getConfigValue(DEV_HOST) + ":8030/" + path;
-            //return "http://" + DEV_HOST + ":8030/" + path;
+            //return "http://" + ConfigUtil.getConfigValue(DEV_HOST) + ":8030/" + path;
+            return "http://" + DEV_HOST + ":8030/" + path;
         }
-        return "http://" + ConfigUtil.getConfigValue(RELEASE_HOST) + "/" + path;
-        //return "http://" + RELEASE_HOST + "/" + path;
+        //return "http://" + ConfigUtil.getConfigValue(RELEASE_HOST) + "/" + path;
+        return "http://" + RELEASE_HOST + "/" + path;
     }
 
     public static void login(String userName, String pas, final AsyncHttpResponseHandler responseHandler) {

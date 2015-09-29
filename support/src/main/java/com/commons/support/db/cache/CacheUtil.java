@@ -4,7 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.commons.support.db.DaoUtil;
-import com.commons.support.db.config.ConfigDao;
+
 import de.greenrobot.dao.query.DeleteQuery;
 import de.greenrobot.dao.query.QueryBuilder;
 
@@ -38,7 +38,7 @@ public class CacheUtil {
 
     public static Cache getCache(String key) {
         QueryBuilder qb = cacheDao.queryBuilder();
-        qb.where(ConfigDao.Properties.Key.eq(key));
+        qb.where(CacheDao.Properties.Key.eq(key));
         Cache cache = (Cache) qb.unique();
         if (cache == null) {
             cache = new Cache(key, "");
@@ -57,7 +57,7 @@ public class CacheUtil {
             return "";
         }
         QueryBuilder qb = cacheDao.queryBuilder();
-        qb.where(ConfigDao.Properties.Key.eq(key));
+        qb.where(CacheDao.Properties.Key.eq(key));
         Cache cache = (Cache) qb.unique();
         if (cache == null) {
             return "";
@@ -77,7 +77,7 @@ public class CacheUtil {
 
     public static void delete(String key) {
         QueryBuilder qb = cacheDao.queryBuilder();
-        DeleteQuery bd = qb.where(ConfigDao.Properties.Key.eq(key)).buildDelete();
+        DeleteQuery bd = qb.where(CacheDao.Properties.Key.eq(key)).buildDelete();
         bd.executeDeleteWithoutDetachingEntities();
         //or
         //Config config = getConfig(key);
@@ -86,7 +86,7 @@ public class CacheUtil {
 
     public static boolean exist(String key) {
         QueryBuilder qb = cacheDao.queryBuilder();
-        qb.where(ConfigDao.Properties.Key.eq(key));
+        qb.where(CacheDao.Properties.Key.eq(key));
         long cnt = qb.count();
         return cnt > 0 ? true : false;
     }

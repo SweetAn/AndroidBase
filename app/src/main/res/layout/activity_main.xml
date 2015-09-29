@@ -23,5 +23,16 @@
         android:background="@drawable/ic_btn_bg"
         />
 
+    <TextView
+        android:id="@+id/btn_article"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:gravity="center"
+        android:layout_margin="20dp"
+        android:textColor="@color/white"
+        android:text="资讯列表"
+        android:background="@drawable/ic_btn_bg"
+        />
+
 
 </LinearLayout>

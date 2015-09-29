@@ -21,8 +21,13 @@ public class ArticlePresenter {
         articleModel = new ArticleModel();
     }
 
-    public void getArticles(Page page){
+    public void getArticles(final Page page){
         articleModel.getArticles(page, new MAsyncHttpResponseHandler() {
+            @Override
+            public void MRequestEnd() {
+                super.MRequestEnd();
+                articleView.requestEnd();
+            }
             @Override
             public void onMSuccess(Result result) {
                 if (result.isResult()) {

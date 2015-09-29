@@ -5,7 +5,7 @@
               android:layout_gravity="center"
               >
 
-    <com.dianmi365.widget.ptr.PtrClassicFrameLayout
+    <com.androidbase.widget.ptr.PtrClassicFrameLayout
         android:id="@+id/ptr_frame"
         xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
             android:dividerHeight="0.5dp"
             >
         </ListView>
-    </com.dianmi365.widget.ptr.PtrClassicFrameLayout>
+    </com.androidbase.widget.ptr.PtrClassicFrameLayout>
 
 
     <LinearLayout

@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.commons.support.db.config.DaoMaster;
 
 import java.util.ArrayList;
 import java.util.Arrays;

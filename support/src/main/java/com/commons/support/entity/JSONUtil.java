@@ -18,7 +18,7 @@ public class JSONUtil {
         return JSON.parseArray(text, clazz);
     }
 
-    public String toJSONString(Object object) {
+    public static String toJSONString(Object object) {
         return JSON.toJSONString(object);
     }
 

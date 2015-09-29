@@ -15,17 +15,17 @@ public class Config {
     public Config() {
     }
 
-    public Config(String key,String value) {
-        this.key = key;
-        this.value = value;
-    }
-
     public Config(Long id) {
         this.id = id;
     }
 
     public Config(Long id, String key, String value) {
         this.id = id;
+        this.key = key;
+        this.value = value;
+    }
+
+    public Config(String key, String value) {
         this.key = key;
         this.value = value;
     }

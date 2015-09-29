@@ -2,6 +2,8 @@ package com.commons.support.db.config;
 
 import android.content.Context;
 
+import com.commons.support.db.DaoUtil;
+
 import de.greenrobot.dao.query.DeleteQuery;
 import de.greenrobot.dao.query.QueryBuilder;
 
@@ -10,8 +12,6 @@ import de.greenrobot.dao.query.QueryBuilder;
  */
 public class ConfigUtil {
 
-    private static DaoMaster daoMaster;
-    private static DaoSession daoSession;
     private static ConfigDao configDao;
 
     /**
@@ -19,27 +19,9 @@ public class ConfigUtil {
      * @param context
      */
     public static void init(Context context) {
-        daoSession = getDaoSession(context);
-        configDao = daoSession.getConfigDao();
+        configDao = DaoUtil.getDaoSession(context).getConfigDao();
     }
 
-    public static DaoMaster getDaoMaster(Context context) {
-        if (daoMaster == null) {
-            DaoMaster.OpenHelper helper = new DaoMaster.DevOpenHelper(context, "config", null);
-            daoMaster = new DaoMaster(helper.getWritableDatabase());
-        }
-        return daoMaster;
-    }
-
-    public static DaoSession getDaoSession(Context context) {
-        if (daoSession == null) {
-            if (daoMaster == null) {
-                daoMaster = getDaoMaster(context);
-            }
-            daoSession = daoMaster.newSession();
-        }
-        return daoSession;
-    }
 
 
     public static void save(Config config) {

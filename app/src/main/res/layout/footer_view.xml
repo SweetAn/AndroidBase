@@ -1,0 +1,54 @@
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="50dp"-->
+    <!--android:minHeight="40dp"-->
+    <!--android:clickable="false"-->
+    <!--android:orientation="vertical">-->
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/tv_ptr_footer_loading"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:clickable="false"
+        android:gravity="center"
+        android:minHeight="40dp"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ProgressBar
+            android:id="@+id/iv_loading"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+
+        <TextView
+            android:id="@+id/tv_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="@string/loading"
+            android:textColor="@color/thin_black" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <!--<TextView-->
+        <!--android:id="@+id/tv_ptr_footer_end"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:clickable="false"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:text="\n—— 没有了 ——\n"-->
+        <!--android:textColor="@color/txt_label_gray"-->
+        <!--android:visibility="gone" />-->
+
+<!--</LinearLayout>-->

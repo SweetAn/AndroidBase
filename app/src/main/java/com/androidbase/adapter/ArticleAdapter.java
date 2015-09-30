@@ -6,7 +6,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -31,14 +30,16 @@ public class ArticleAdapter extends BaseAdapter {
         list = new ArrayList<Article>();
     }
 
-    public void refresh(List<Article> articles) {
+    @Override
+    public void refresh(List list) {
         this.list.clear();
-        this.list.addAll(articles);
+        this.list.addAll(list);
         notifyDataSetChanged();
     }
 
-    public void loadMore(List<Article> articles) {
-        this.list.addAll(articles);
+    @Override
+    public void loadMore(List list) {
+        this.list.addAll(list);
         notifyDataSetChanged();
     }
 

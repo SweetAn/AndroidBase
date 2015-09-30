@@ -7,8 +7,8 @@ import com.commons.support.db.config.ConfigUtil;
 import com.commons.support.log.LogUtil;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.TextHttpResponseHandler;
+import cz.msebera.android.httpclient.Header;
 
-import org.apache.http.Header;
 
 /**
  * Created by qianjin on 2015/9/28.
@@ -25,7 +25,7 @@ public class httpDns {
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 if (!TextUtils.isEmpty(responseString)) {
                     LogUtil.log(responseString);
-                    ConfigUtil.save(new Config(host,responseString));
+                    ConfigUtil.save(new Config(host, responseString));
                 }
             }
         });

@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.commons.support.db.Migration.AbstractMigratorHelper;
 import com.commons.support.db.cache.CacheDao;
 import com.commons.support.db.config.ConfigDao;
 
@@ -18,7 +19,7 @@ import de.greenrobot.dao.identityscope.IdentityScopeType;
  * Master of DAO (schema version 1): knows all DAOs.
 */
 public class DaoMaster extends AbstractDaoMaster {
-    public static final int SCHEMA_VERSION = 1;
+    public static final int SCHEMA_VERSION = 3;
 
     /** Creates underlying database table using DAOs. */
     public static void createAllTables(SQLiteDatabase db, boolean ifNotExists) {
@@ -54,8 +55,28 @@ public class DaoMaster extends AbstractDaoMaster {
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             Log.i("greenDAO", "Upgrading schema from version " + oldVersion + " to " + newVersion + " by dropping all tables");
-            dropAllTables(db, true);
-            onCreate(db);
+//            dropAllTables(db, true);
+//            onCreate(db);
+
+
+           /* i represent the version where the user is now and the class named with this number implies that is upgrading from i to i++ schema */
+            for (int i = oldVersion; i < newVersion; i++) {
+                try {
+                /* New instance of the class that migrates from i version to i++ version named DBMigratorHelper{version that the db has on this moment} */
+                    AbstractMigratorHelper migratorHelper = (AbstractMigratorHelper) Class.forName("com.commons.support.db.Migration.DBMigrationHelper" + i).newInstance();
+                    if (migratorHelper != null) {
+                     System.out.println("greenDAO.11111111111111");
+                    /* Upgrade de db */
+                        migratorHelper.onUpgrade(db);
+                    }
+                } catch (ClassNotFoundException | ClassCastException | IllegalAccessException | InstantiationException e) {
+                    Log.e("greenDAO", "Could not migrate from schema from schema: " + i + " to " + i++);
+                /* If something fail prevent the DB to be updated to future version if the previous version has not been upgraded successfully */
+                    break;
+                }
+            }
+
+
         }
     }
 

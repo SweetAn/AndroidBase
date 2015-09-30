@@ -48,6 +48,9 @@ public class MainActivity extends BaseActivity {
         ConfigUtil.save(new Config("test2", "this is a value2"));
         ConfigUtil.save(new Config("test3", "this is a value3"));
         ConfigUtil.save(new Config("test4", "this is a value4"));
+
+        ConfigUtil.save(new Config("test5", "this is a value5", "test5c1", "test5c2"));
+        ConfigUtil.save(new Config("test6", "this is a value6", "test6c1", "test6c2"));
         String value = ConfigUtil.getConfigValue("test");
         printLog("value is :" + value);
 

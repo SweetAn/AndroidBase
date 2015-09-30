@@ -26,6 +26,8 @@ public class ConfigDao extends AbstractDao<Config, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Key = new Property(1, String.class, "key", false, "KEY");
         public final static Property Value = new Property(2, String.class, "value", false, "VALUE");
+        public final static Property columntest = new Property(3, String.class, "columntest", false, "COLUMNTEST");
+        public final static Property columntest2 = new Property(4, String.class, "columntest2", false, "COLUMNTEST2");
     };
 
 
@@ -63,6 +65,10 @@ public class ConfigDao extends AbstractDao<Config, Long> {
         }
         stmt.bindString(2, entity.getKey());
         stmt.bindString(3, entity.getValue());
+
+        stmt.bindString(4, entity.getColumntest());
+        stmt.bindString(5, entity.getColumntest2());
+
     }
 
     /** @inheritdoc */
@@ -78,6 +84,9 @@ public class ConfigDao extends AbstractDao<Config, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.getString(offset + 1), // key
             cursor.getString(offset + 2) // value
+
+                ,cursor.getString(offset + 3)
+                ,cursor.getString(offset + 4)
         );
         return entity;
     }
@@ -88,6 +97,9 @@ public class ConfigDao extends AbstractDao<Config, Long> {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setKey(cursor.getString(offset + 1));
         entity.setValue(cursor.getString(offset + 2));
+
+        entity.setColumntest(cursor.getString(offset + 3));
+        entity.setColumntest2(cursor.getString(offset + 4));
      }
     
     /** @inheritdoc */

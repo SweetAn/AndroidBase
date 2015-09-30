@@ -26,10 +26,14 @@ public class ConfigUtil {
 
     public static void save(Config config) {
         Config savedConfig = getConfig(config.getKey());
-        if (savedConfig == null) {
+        if (savedConfig == null) { // 不会出现为空的情况
             configDao.insertOrReplace(config);
         } else {
             savedConfig.setValue(config.getValue());
+
+            savedConfig.setColumntest(config.getColumntest());
+            savedConfig.setColumntest2(config.getColumntest2());
+
             configDao.insertOrReplace(savedConfig);
         }
     }

@@ -46,12 +46,16 @@ public class HttpHelper extends BaseHttpHelper {
 
     public static void getFaqList(Page page,AsyncHttpResponseHandler handler){
         //http://api-test.365hr.com:8030/faqlist/257?city_id=257&p=1&st=
-        get(initUrl("faqlist/257"),page.getParams(),handler);
+        String url = initUrl("faqlist/257");
+        LogUtil.log("url is : " + url);
+        get(url, page.getParams(), handler);
     }
 
     public static void getArticleList(Page page,AsyncHttpResponseHandler handler){
         //http://api-test.365hr.com:8030/articlelist/257?p=1&st=
-        get(initUrl("articlelist/257"),page.getParams(),handler);
+        String url = initUrl("articlelist/257");
+        LogUtil.log("url is : "  + url);
+        get(url,page.getParams(),handler);
     }
 
 

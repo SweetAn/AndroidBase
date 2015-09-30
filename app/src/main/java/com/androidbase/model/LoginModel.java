@@ -40,7 +40,6 @@ public class LoginModel implements ILoginModel {
 
     }
 
-
     public String getCacheKey(String key) {
         String cacheKey = getClass().getName() + "-" + key;
         LogUtil.log("cache key is :" + key);

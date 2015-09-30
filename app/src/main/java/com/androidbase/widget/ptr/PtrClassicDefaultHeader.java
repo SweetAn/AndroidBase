@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.androidbase.R;
 import com.androidbase.widget.ptr.indicator.PtrIndicator;
-import com.commons.support.log.LogUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -178,7 +177,7 @@ public class PtrClassicDefaultHeader extends FrameLayout implements PtrUIHandler
     Handler handler = new Handler(Looper.getMainLooper()){
         @Override
         public void handleMessage(Message msg) {
-            LogUtil.log("0902...msg.what= " + msg.what);
+            //LogUtil.log("0902...msg.what= " + msg.what);
             if(!isLoadAniShow) return;
             switch (msg.what) {
                 case -1:

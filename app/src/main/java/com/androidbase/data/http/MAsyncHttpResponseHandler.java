@@ -12,7 +12,7 @@ import com.commons.support.db.cache.CacheUtil;
 import com.commons.support.entity.JSONUtil;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
-import org.apache.http.Header;
+import cz.msebera.android.httpclient.Header;
 
 
 /**
@@ -136,10 +136,8 @@ public abstract class MAsyncHttpResponseHandler extends AsyncHttpResponseHandler
 
     public void onMSuccess(int statusCode, Header[] headers, byte[] responseBody, Result result) {
     }
-
     public void onMFailure(int statusCode, Header[] headers, byte[] responseBody, @Nullable Result result, @Nullable Throwable throwable) {
     }
-
     /**
      * 成功失败都会执行的操作，如关闭加载动画，都重写此方法
      */

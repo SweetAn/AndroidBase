@@ -7,7 +7,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.entity.StringEntity;
 
 
@@ -55,20 +55,22 @@ public class BaseHttpHelper {
 
     public static AsyncHttpClient getClient() {
 
-        SchemeRegistry schemeRegistry = new SchemeRegistry();
 
-        AsyncHttpClient client = new AsyncHttpClient(8030);
+        AsyncHttpClient client = new AsyncHttpClient();
         client.setTimeout(20 * 1000);
         //client.setUserAgent(encode("点米社保通") + " " + Utility.getAppVersionName(context) + "," + Utility.getAppVersionCode(context) + " (Android; Android " + mDeviceUtil.getReleaseVersion() + "; zh_CN) EEBoMobileAgent_Android");
         //client.setUserAgent("EEBoMobileAgent_Android");
         // client.addHeader("ver", Utility.getAppVersionName(context));
         client.addHeader("ver", Utility.getAppVersionName(context) + "," + Utility.getAppVersionCode(context));
         //client.addHeader("conn", Connectivity.getConnectionMode(context));
+        //client.getHttpContext().setAttribute(ClientContext.TARGET_AUTH_STATE,"host");
         client.addHeader("mfg", "EB009");
-        client.addHeader("Host", "api-test.365hr.com:8030");
         client.addHeader("os", "1");
         client.addHeader("x-token", getXToken());
         client.setLoggingEnabled(false);
+        client.getHttpContext().setAttribute(ClientContext.TARGET_AUTH_STATE,"test");
+        client.addHeader("Host", "api-test.365hr.com:8030");
+
         return client;
     }
 

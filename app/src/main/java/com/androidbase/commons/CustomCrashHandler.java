@@ -11,13 +11,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.androidbase.MApplication;
+import com.androidbase.util.LogUtil;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -39,7 +36,6 @@ public class CustomCrashHandler implements Thread.UncaughtExceptionHandler {
     private Context mContext;
     private static final String SDCARD_ROOT = Environment.getExternalStorageDirectory().toString();
     private static CustomCrashHandler mInstance = new CustomCrashHandler();
-
 
     private CustomCrashHandler(){}
     /**
@@ -150,7 +146,6 @@ public class CustomCrashHandler implements Thread.UncaughtExceptionHandler {
      * @return
      */
     private void savaInfoToSD(Context context, Throwable ex){
-        String fileName = null;
         StringBuffer sb = new StringBuffer();
 
         for (Map.Entry<String, String> entry : obtainSimpleInfo(context).entrySet()) {
@@ -161,43 +156,7 @@ public class CustomCrashHandler implements Thread.UncaughtExceptionHandler {
 
         sb.append(obtainExceptionInfo(ex));
 
-        String errorlog = "uncatchErrorlog.txt";
-        String savePath = "";
-        String logFilePath = "";
-        FileWriter fw = null;
-        PrintWriter pw = null;
-        try {
-            //判断是否挂载了SD卡
-            String storageState = Environment.getExternalStorageState();
-            if(storageState.equals(Environment.MEDIA_MOUNTED)){
-                savePath = Environment.getExternalStorageDirectory() + "/"+Constants.BASE_DIR_NAME+"/log/";
-                File file = new File(savePath);
-                if(!file.exists()){
-                    file.mkdirs();
-                }
-                logFilePath = savePath + errorlog;
-            }
-            //没有挂载SD卡，无法写文件
-            if(logFilePath == ""){
-                return;
-            }
-            File logFile = new File(logFilePath);
-            if (!logFile.exists()) {
-                logFile.createNewFile();
-            }
-            fw = new FileWriter(logFile,true);
-            pw = new PrintWriter(fw);
-            pw.println("\n--------------------" + (DateFormat.getDateTimeInstance().format(new Date())) + "---------------------");
-            pw.println(sb.toString());
-            pw.close();
-            fw.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }finally{
-            if(pw != null){ pw.close(); }
-            if(fw != null){ try { fw.close(); } catch (IOException e) { }}
-        }
-
+        LogUtil.saveLog(Constants.CCH_FILE_NAME, sb.toString());
 
 //        if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
 //            File dir = new File(SDCARD_ROOT + File.separator + Constants.BASE_DIR_NAME + File.separator + "log/");

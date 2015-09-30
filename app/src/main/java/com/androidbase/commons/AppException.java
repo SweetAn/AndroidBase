@@ -35,7 +35,7 @@ public class AppException extends Exception{
 	public AppException(String detailMessage) {
 		super(detailMessage);
 		if (BuildConfig.LOG_DEBUG) {
-			saveErrorLog(this);
+			saveErrorLog();
 			printStackTrace();
 		}
 	}
@@ -114,11 +114,11 @@ public class AppException extends Exception{
 	}
 
 	public void saveErrorLog() {
-		LogUtil.saveErrorLog(this);
+		LogUtil.saveLog(Constants.EX_FILE_NAME, this);
 	}
 
 	public void saveErrorLog(Exception excp) {
-		LogUtil.saveErrorLog(excp);
+		LogUtil.saveLog(Constants.EX_FILE_NAME, excp);
 	}
 
 	public static AppException http(int code) {

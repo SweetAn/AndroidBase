@@ -5,6 +5,7 @@ import android.content.Context;
 import com.androidbase.commons.CustomCrashHandler;
 import com.androidbase.data.http.BaseHttpHelper;
 import com.androidbase.data.http.HttpHelper;
+import com.androidbase.push.MiPushMessageReceiver;
 import com.commons.support.db.DaoUtil;
 import com.commons.support.http.httpDns;
 import com.commons.support.img.ImageLoader;
@@ -31,6 +32,9 @@ public class AllConfig {
         //init UncaughtException
         CustomCrashHandler mCustomCrashHandler = CustomCrashHandler.getInstance();
         mCustomCrashHandler.setCustomCrashHanler(context);
+
+        //init push
+        MiPushMessageReceiver.initMiPush(context);
 
         //init others
 //        //初始化talkingData

@@ -19,7 +19,7 @@ import org.json.JSONObject;
 
 import de.greenrobot.event.EventBus;
 
-public class BaseActivity extends Activity {
+public abstract class BaseActivity extends Activity {
 
     public boolean isLoading = false;
     public Dialog loadingDialog;

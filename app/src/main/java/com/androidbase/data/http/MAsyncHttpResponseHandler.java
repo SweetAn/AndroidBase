@@ -8,10 +8,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.androidbase.entity.Result;
 import com.androidbase.util.LogUtil;
 import com.commons.support.db.cache.Cache;
-import com.commons.support.db.cache.CacheUtil;
+import com.commons.support.db.cache.CacheDB;
 import com.commons.support.entity.JSONUtil;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import cz.msebera.android.httpclient.Header;
 
 
@@ -37,7 +36,7 @@ public abstract class MAsyncHttpResponseHandler extends AsyncHttpResponseHandler
 
     @Override
     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-        MRequestEnd();
+        RequestEnd();
         try {
             Result baseResult = JSON.parseObject(responseBody, Result.class);
             if (baseResult != null) {
@@ -88,7 +87,7 @@ public abstract class MAsyncHttpResponseHandler extends AsyncHttpResponseHandler
 
     @Override
     public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable throwable) {
-        MRequestEnd();
+        RequestEnd();
         onMFailure(statusCode, null, throwable);
         onMFailure(statusCode, headers, responseBody, null, throwable);
     }
@@ -97,7 +96,7 @@ public abstract class MAsyncHttpResponseHandler extends AsyncHttpResponseHandler
     public void onStart() {
         super.onStart();
         if (!TextUtils.isEmpty(cacheKey)) {
-            cacheValue = CacheUtil.getCacheValue(cacheKey);
+            cacheValue = CacheDB.getCacheValue(cacheKey);
             if (!TextUtils.isEmpty(cacheValue)) {
                 Result result = JSONUtil.parseObject(cacheValue, Result.class);
                 result.setNeedRefresh(true);
@@ -123,7 +122,7 @@ public abstract class MAsyncHttpResponseHandler extends AsyncHttpResponseHandler
             cache.setTimeout(timeout);
             cache.setCurrentTime(System.currentTimeMillis());
             cache.setValue(JSONUtil.toJSONString(result));
-            CacheUtil.save(cache);
+            CacheDB.save(cache);
         } else {
             LogUtil.log("cacheKey is empty, do not save cache!");
         }
@@ -141,6 +140,6 @@ public abstract class MAsyncHttpResponseHandler extends AsyncHttpResponseHandler
     /**
      * 成功失败都会执行的操作，如关闭加载动画，都重写此方法
      */
-    public void MRequestEnd() {
+    public void RequestEnd() {
     }
 }

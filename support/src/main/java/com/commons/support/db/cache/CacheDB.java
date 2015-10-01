@@ -11,7 +11,7 @@ import de.greenrobot.dao.query.QueryBuilder;
 /**
  * Created by qianjin on 2015/9/29.
  */
-public class CacheUtil {
+public class CacheDB {
 
     private static CacheDao cacheDao;
 
@@ -23,6 +23,11 @@ public class CacheUtil {
     public static void init(Context context) {
         cacheDao = DaoUtil.getDaoSession(context).getCacheDao();
     }
+
+
+
+
+
 
     public static void save(Cache cache) {
         Cache savedCache = getCache(cache.getKey());

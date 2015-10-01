@@ -2,7 +2,7 @@ package com.commons.support.db;
 
 import android.content.Context;
 
-import com.commons.support.db.cache.CacheUtil;
+import com.commons.support.db.cache.CacheDB;
 import com.commons.support.db.config.ConfigUtil;
 
 /**
@@ -22,7 +22,7 @@ public class DaoUtil {
     public static void init(Context context) {
         daoSession = getDaoSession(context);
         ConfigUtil.init(context);
-        CacheUtil.init(context);
+        CacheDB.init(context);
     }
 
     private static DaoMaster getDaoMaster(Context context) {

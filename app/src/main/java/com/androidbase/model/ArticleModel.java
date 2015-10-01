@@ -1,7 +1,7 @@
 package com.androidbase.model;
 
 import com.androidbase.data.http.HttpHelper;
-import com.androidbase.data.http.MAsyncHttpResponseHandler;
+import com.androidbase.data.http.HttpResultHandler;
 import com.androidbase.entity.Page;
 import com.androidbase.util.LogUtil;
 
@@ -10,7 +10,7 @@ import com.androidbase.util.LogUtil;
  */
 public class ArticleModel {
 
-    public void getArticles(Page page,MAsyncHttpResponseHandler handler){
+    public void getArticles(Page page,HttpResultHandler handler){
         if(page.isNeedCache()) {
             handler.initCache(getCacheKey("getArticles"));
         }

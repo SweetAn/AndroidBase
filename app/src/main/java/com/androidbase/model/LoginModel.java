@@ -36,7 +36,7 @@ public class LoginModel implements ILoginModel {
 //            }
 //        });
         responseHandler.initCache(getCacheKey("login"));
-        HttpHelper.login(userName,pas,responseHandler);
+        HttpHelper.login(userName, pas, responseHandler);
 
     }
 

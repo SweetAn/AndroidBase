@@ -10,13 +10,13 @@ import com.androidbase.entity.Page;
 import com.androidbase.entity.Result;
 import com.androidbase.presenter.ArticlePresenter;
 import com.androidbase.util.LogUtil;
-import com.androidbase.view.iview.IArticleView;
+import com.androidbase.view.iview.IBaseView;
 import com.androidbase.widget.ptr.PtrListView;
 
 /**
  * Created by qianjin on 2015/9/29.
  */
-public class ArticleListActivity extends BaseActivity implements IArticleView{
+public class ArticleListActivity extends BaseActivity implements IBaseView{
 
 
     ArticlePresenter presenter;
@@ -59,9 +59,8 @@ public class ArticleListActivity extends BaseActivity implements IArticleView{
 
     }
 
-
     @Override
-    public void getArticlesScuccess(Result result) {
+    public void getDataSuccess(Result result) {
         Page<Article> resultPage = result.getPage(Article.class);
         page.initPage(resultPage);
         if (page.isRefresh()) {
@@ -72,10 +71,6 @@ public class ArticleListActivity extends BaseActivity implements IArticleView{
         } else {
             adapter.loadMore(page.getDataList());
         }
-    }
-    @Override
-    public void getArticlesFail(String msg) {
-        showToast(msg);
     }
 
     @Override

@@ -1,12 +1,10 @@
 package com.androidbase.presenter;
 
-import android.support.annotation.Nullable;
-
-import com.androidbase.data.http.MAsyncHttpResponseHandler;
+import com.androidbase.data.http.HttpResultHandler;
 import com.androidbase.entity.Page;
 import com.androidbase.entity.Result;
 import com.androidbase.model.ArticleModel;
-import com.androidbase.view.iview.IArticleView;
+import com.androidbase.view.iview.IBaseView;
 
 /**
  * Created by qianjin on 2015/9/25.
@@ -14,32 +12,18 @@ import com.androidbase.view.iview.IArticleView;
 public class ArticlePresenter {
 
     private ArticleModel articleModel;
-    private IArticleView articleView;
+    private IBaseView articleView;
 
-    public ArticlePresenter(IArticleView articleView){
+    public ArticlePresenter(IBaseView articleView){
         this.articleView = articleView;
         articleModel = new ArticleModel();
     }
 
     public void getArticles(final Page page){
-        articleModel.getArticles(page, new MAsyncHttpResponseHandler() {
+        articleModel.getArticles(page, new HttpResultHandler() {
             @Override
-            public void MRequestEnd() {
-                super.MRequestEnd();
-                articleView.requestEnd();
-            }
-            @Override
-            public void onMSuccess(Result result) {
-                if (result.isResult()) {
-                    articleView.getArticlesScuccess(result);
-                } else {
-                    articleView.getArticlesFail(result.getMsg());
-                }
-            }
-            @Override
-            public void onMFailure(int statusCode, @Nullable Result result, @Nullable Throwable throwable) {
-                if (throwable != null) throwable.printStackTrace();
-                articleView.getArticlesFail("网络异常！");
+            public void onSuccess(Result result) {
+                articleView.getDataSuccess(result);
             }
         });
     }

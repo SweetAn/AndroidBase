@@ -75,7 +75,6 @@ public class ArticleListActivity extends BaseActivity implements IBaseView{
 
     @Override
     public void requestEnd() {
-        super.requestEnd();
         listView.loadDataComplete();
     }
 }

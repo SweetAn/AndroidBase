@@ -95,7 +95,7 @@ public class LogUtil {
                 logFilePath = savePath + fileName;
             }
             //没有挂载SD卡，无法写文件
-            if(logFilePath == ""){
+            if(TextUtils.isEmpty(logFilePath)){
                 return;
             }
             File logFile = new File(logFilePath);

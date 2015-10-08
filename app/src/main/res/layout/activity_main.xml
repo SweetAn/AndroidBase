@@ -34,5 +34,16 @@
         android:background="@drawable/ic_btn_bg"
         />
 
+    <TextView
+        android:id="@+id/btn_web"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:gravity="center"
+        android:layout_margin="20dp"
+        android:textColor="@color/white"
+        android:text="网页访问"
+        android:background="@drawable/ic_btn_bg"
+        />
+
 
 </LinearLayout>

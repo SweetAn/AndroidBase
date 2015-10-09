@@ -32,7 +32,9 @@ public abstract class HttpResultHandler extends AsyncHttpResponseHandler {
         Result baseResult = JSONUtil.parseObject(responseBody, Result.class);
         if (baseResult != null) {
             if (baseResult.isResult()) {
+
                 CacheUtil.saveResultCache(baseResult, cacheKey, timeout);
+
                 if (TextUtils.isEmpty(cacheValue) || !CacheUtil.isDataEqualsCache(cacheKey, baseResult)) {
                     baseResult.setNeedRefresh(true);
                 } else {
@@ -41,15 +43,24 @@ public abstract class HttpResultHandler extends AsyncHttpResponseHandler {
             }
         } else {
             baseResult = new Result();
+            baseResult.setErrorMsg("没有解析出结果！");
             baseResult.setResult(false);
         }
+
         onSuccess(baseResult);
+
         requestEnd();
     }
 
     @Override
     public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable throwable) {
         throwable.printStackTrace();
+
+        Result baseResult = new Result();
+        baseResult.setErrorMsg("请求服务器失败！");
+        baseResult.setResult(false);
+        onSuccess(baseResult);
+
         requestEnd();
     }
 

@@ -47,8 +47,6 @@ public abstract class MAsyncHttpResponseHandler extends AsyncHttpResponseHandler
                     if (TextUtils.isEmpty(cacheValue)) {
 
                         baseResult.setNeedRefresh(true);
-                        onMSuccess(baseResult);
-                        onMSuccess(statusCode, headers, responseBody, baseResult);
 
                     } else {
 //                        if (!cacheValue.equals(new String(responseBody))) {
@@ -60,28 +58,22 @@ public abstract class MAsyncHttpResponseHandler extends AsyncHttpResponseHandler
                             LogUtil.log("result str:" + JSONUtil.toJSONString(baseResult));
 
                             baseResult.setNeedRefresh(true);
-                            onMSuccess(baseResult);
-                            onMSuccess(statusCode, headers, responseBody, baseResult);
                         } else {
-
                             LogUtil.log("get data and cache is equals, not need refresh!");
                             baseResult.setNeedRefresh(false);
-                            onMSuccess(baseResult);
-                            onMSuccess(statusCode, headers, responseBody, baseResult);
                         }
+
+                        onMSuccess(baseResult);
                     }
                 } else {
                     onMFailure(statusCode, baseResult, null);
-                    onMFailure(statusCode, headers, responseBody, baseResult, null);
                 }
             } else { // 几乎不存在
                 onMFailure(statusCode, null, null);
-                onMFailure(statusCode, headers, responseBody, null, null);
             }
         } catch (Exception e) {
             e.printStackTrace();
             onMFailure(statusCode, null, e);
-            onMFailure(statusCode, headers, responseBody, null, e);
         }
     }
 
@@ -89,7 +81,6 @@ public abstract class MAsyncHttpResponseHandler extends AsyncHttpResponseHandler
     public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable throwable) {
         RequestEnd();
         onMFailure(statusCode, null, throwable);
-        onMFailure(statusCode, headers, responseBody, null, throwable);
     }
 
     @Override
@@ -133,10 +124,6 @@ public abstract class MAsyncHttpResponseHandler extends AsyncHttpResponseHandler
 
     public abstract void onMFailure(int statusCode, @Nullable Result result, @Nullable Throwable throwable);
 
-    public void onMSuccess(int statusCode, Header[] headers, byte[] responseBody, Result result) {
-    }
-    public void onMFailure(int statusCode, Header[] headers, byte[] responseBody, @Nullable Result result, @Nullable Throwable throwable) {
-    }
     /**
      * 成功失败都会执行的操作，如关闭加载动画，都重写此方法
      */

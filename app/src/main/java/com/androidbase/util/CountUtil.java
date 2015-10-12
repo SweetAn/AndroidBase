@@ -11,6 +11,8 @@ import com.tendcloud.tenddata.TCAgent;
  */
 public class CountUtil {
 
+    public static final String PAGE_TEST = "page_test";
+
     public static void onPause(Activity context) {
         if (!BuildConfig.DEBUG) {
             TCAgent.onPause(context);

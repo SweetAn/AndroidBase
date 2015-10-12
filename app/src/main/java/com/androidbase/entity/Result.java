@@ -34,6 +34,8 @@ public class Result {
 
     private String data;
 
+    private boolean requestEnd;
+
 
     public String getDataStr(String key){
         if (!TextUtils.isEmpty(data)) {
@@ -107,5 +109,13 @@ public class Result {
 
     public void setNeedRefresh(boolean needRefresh) {
         this.needRefresh = needRefresh;
+    }
+
+    public boolean isRequestEnd() {
+        return requestEnd;
+    }
+
+    public void setRequestEnd(boolean requestEnd) {
+        this.requestEnd = requestEnd;
     }
 }

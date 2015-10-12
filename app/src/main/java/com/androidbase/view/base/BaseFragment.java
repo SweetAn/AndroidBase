@@ -1,4 +1,4 @@
-package com.androidbase;
+package com.androidbase.view.base;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -12,61 +12,33 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.commons.support.log.LogUtil;
-import com.commons.support.util.DialogUtil;
+import com.commons.support.util.Utility;
 
-import org.json.JSONObject;
 
-public class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment implements IBaseView{
 
     public boolean isLoading = false;
     public Dialog loadingDialog;
-    public View footer;
     public Activity context;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         this.context = getActivity();
-        loadingDialog = DialogUtil.createLoadingDialog(context, "加载中..");
+        loadingDialog = Utility.createLoadingDialog(context, "加载中..");
     }
 
     public void startActivity(Class mClass){
         startActivity(new Intent(context, mClass));
     }
 
-    protected void showToast(String msg) {
+    protected void showToastCenter(String msg) {
+
         if (TextUtils.isEmpty(msg)) {
             return;
         }
+
         Toast toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT);
         toast.show();
-    }
-
-    public JSONObject getJsonObject(byte[] bytes) throws Exception {
-        return new JSONObject(new String(bytes));
-    }
-
-    public void loadStart(boolean showFooter) {
-        if (isLoading) {
-            return;
-        }
-        if (showFooter) {
-            footer.setVisibility(View.VISIBLE);
-        } else {
-            if (loadingDialog != null) {
-                // loadingDialog.show();
-            }
-        }
-        isLoading = true;
-    }
-
-    public void loadEnd() {
-        isLoading = false;
-        if (loadingDialog != null) {
-            loadingDialog.dismiss();
-        }
-        footer.setVisibility(View.GONE);
     }
 
     public void showToast(int drawable, String msg) {
@@ -82,7 +54,7 @@ public class BaseFragment extends Fragment {
         toast.show();
     }
 
-    public void showToastCenter(String msg) {
+    public void showToast(String msg) {
         if (TextUtils.isEmpty(msg)) {
             return;
         }
@@ -91,8 +63,16 @@ public class BaseFragment extends Fragment {
         toast.show();
     }
 
-    public void printLog(String msg) {
-        LogUtil.log(msg);
+    public void login(){
+        startActivity(NewLoginActivity.class);
+    }
+
+    public abstract void initView(View view);
+    public abstract void getData();
+
+    public void init(View view){
+        initView(view);
+        getData();
     }
 
 

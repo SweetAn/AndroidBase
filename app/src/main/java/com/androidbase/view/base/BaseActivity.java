@@ -1,36 +1,32 @@
-package com.androidbase;
+package com.androidbase.view.base;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.Toast;
 
-import com.androidbase.adapter.BaseAdapter;
-import com.androidbase.entity.Page;
-import com.androidbase.entity.Result;
-import com.commons.support.log.LogUtil;
+import com.androidbase.R;
 import com.commons.support.util.DialogUtil;
 import com.commons.support.widget.TitleBar;
 
-import org.json.JSONObject;
-
 import de.greenrobot.event.EventBus;
 
-public abstract class BaseActivity extends Activity {
+public abstract class BaseActivity extends Activity implements IBaseView{
 
     public boolean isLoading = false;
     public Dialog loadingDialog;
-    public View footer;
     public Activity context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(getViewRes());
         this.context = this;
         loadingDialog = DialogUtil.createLoadingDialog(context, "加载中..");
+        initView();
+        getData();
     }
 
     protected void showToastCenter(String msg) {
@@ -51,28 +47,6 @@ public abstract class BaseActivity extends Activity {
         toast.show();
     }
 
-    public JSONObject getJsonObject(byte[] bytes) throws Exception {
-        return new JSONObject(new String(bytes));
-    }
-
-    public void requestStart() {
-        if (isLoading) {
-            return;
-        }
-        loadingDialog.show();
-        isLoading = true;
-    }
-
-    public void requestEnd() {
-        isLoading = false;
-        if (loadingDialog != null && loadingDialog.isShowing()) {
-            loadingDialog.dismiss();
-        }
-    }
-
-    public void printLog(String msg) {
-        LogUtil.log(msg);
-    }
 
     public void startActivity(Class mClass) {
         startActivity(new Intent(context, mClass));
@@ -91,16 +65,17 @@ public abstract class BaseActivity extends Activity {
         return titleBar;
     }
 
-    public void showListView(Page page,Result result,BaseAdapter adapter) {
-        if (page.isRefresh()) {
-            com.androidbase.util.LogUtil.log("refresh,need refresh is :" + result.isNeedRefresh());
-            if(result.isNeedRefresh()) {
-                adapter.refresh(page.getDataList());
-            }
-        } else {
-            adapter.loadMore(page.getDataList());
-        }
+
+
+    public abstract void initView();
+    public abstract void getData();
+    public abstract int getViewRes();
+
+    public void init(){
+        initView();
+        getData();
     }
+
 
 
 }

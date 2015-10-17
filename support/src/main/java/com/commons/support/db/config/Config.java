@@ -12,9 +12,6 @@ public class Config {
     /** Not-null value. */
     private String value;
 
-    private String columntest="1";
-    private String columntest2="2";
-
     public Config() {
     }
 
@@ -31,21 +28,6 @@ public class Config {
     public Config(String key, String value) {
         this.key = key;
         this.value = value;
-    }
-
-    public Config(Long id, String key, String value, String c1, String c2) {
-        this.id = id;
-        this.key = key;
-        this.value = value;
-        columntest = c1;
-        columntest2 = c2;
-    }
-
-    public Config(String key, String value, String c1, String c2) {
-        this.key = key;
-        this.value = value;
-        columntest = c1;
-        columntest2 = c2;
     }
 
     public Long getId() {
@@ -76,19 +58,4 @@ public class Config {
         this.value = value;
     }
 
-    public String getColumntest() {
-        return columntest;
-    }
-
-    public void setColumntest(String columntest) {
-        this.columntest = columntest;
-    }
-
-    public String getColumntest2() {
-        return columntest2;
-    }
-
-    public void setColumntest2(String columntest2) {
-        this.columntest2 = columntest2;
-    }
 }

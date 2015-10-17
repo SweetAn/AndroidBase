@@ -1,6 +1,7 @@
 package com.commons.support.db.config;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.commons.support.db.DaoUtil;
 
@@ -16,12 +17,12 @@ public class ConfigUtil {
 
     /**
      * 使用ConfigUtil前需init
+     *
      * @param context
      */
     public static void init(Context context) {
         configDao = DaoUtil.getDaoSession(context).getConfigDao();
     }
-
 
 
     public static void save(Config config) {
@@ -30,12 +31,21 @@ public class ConfigUtil {
             configDao.insertOrReplace(config);
         } else {
             savedConfig.setValue(config.getValue());
-
-            savedConfig.setColumntest(config.getColumntest());
-            savedConfig.setColumntest2(config.getColumntest2());
-
             configDao.insertOrReplace(savedConfig);
         }
+    }
+
+    public static void save(String key, String value) {
+        Config config = new Config(key, value);
+        save(config);
+    }
+
+    public static void save(String key, int value) {
+        save(key, String.valueOf(value));
+    }
+
+    public static void save(String key, boolean value) {
+        save(key, String.valueOf(value));
     }
 
     public static Config getConfig(String key) {
@@ -43,7 +53,7 @@ public class ConfigUtil {
         qb.where(ConfigDao.Properties.Key.eq(key));
         Config config = (Config) qb.unique();
         if (config == null) {
-            config = new Config(key,"no data");
+            config = new Config(key, "no data");
         }
         return config;
     }
@@ -56,6 +66,23 @@ public class ConfigUtil {
             return "";
         }
         return config.getValue();
+    }
+
+
+    public static int getIntConfigValue(String key) {
+        String value = getConfigValue(key);
+        if (!TextUtils.isEmpty(value)) {
+           return Integer.valueOf(value);
+        }
+        return 0;
+    }
+
+    public static boolean getBooleanConfigValue(String key) {
+        String value = getConfigValue(key);
+        if (!TextUtils.isEmpty(value)) {
+            return Boolean.valueOf(value);
+        }
+        return false;
     }
 
     public static void deleteAll() {

@@ -1,5 +1,6 @@
 package com.androidbase.presenter;
 
+import com.androidbase.data.http.HttpHelper;
 import com.androidbase.data.http.HttpResultHandler;
 import com.androidbase.entity.Page;
 import com.androidbase.entity.Result;
@@ -20,12 +21,21 @@ public class ArticlePresenter {
     }
 
     public void getArticles(final Page page){
-        articleModel.getArticles(page, new HttpResultHandler() {
+//        articleModel.getArticles(page, new HttpResultHandler() {
+//            @Override
+//            public void onSuccess(Result result) {
+//                articleView.getDataSuccess(result);
+//            }
+//        });
+
+        HttpHelper.getArticleList(page, new HttpResultHandler() {
             @Override
             public void onSuccess(Result result) {
                 articleView.getDataSuccess(result);
             }
         });
+
+
     }
 
 }

@@ -1,51 +1,80 @@
 package com.androidbase.view;
 
-import android.app.Activity;
-import android.view.View;
-import android.widget.AdapterView;
+import android.os.Bundle;
 
+import com.androidbase.BaseActivity;
+import com.androidbase.R;
 import com.androidbase.adapter.ArticleAdapter;
-import com.androidbase.adapter.base.BaseAdapter;
-import com.androidbase.base.BaseListActivity;
-import com.androidbase.data.http.HttpHelper;
-import com.androidbase.data.http.HttpResultHandler;
 import com.androidbase.entity.Article;
+import com.androidbase.entity.Page;
 import com.androidbase.entity.Result;
-import com.androidbase.util.CacheUtil;
+import com.androidbase.presenter.ArticlePresenter;
+import com.androidbase.util.LogUtil;
+import com.androidbase.view.iview.IBaseView;
+import com.androidbase.widget.ptr.PtrListView;
 
 /**
  * Created by qianjin on 2015/9/29.
  */
-public class ArticleListActivity extends BaseListActivity {
+public class ArticleListActivity extends BaseActivity implements IBaseView{
+
+
+    ArticlePresenter presenter;
+    Page<Article> page;
+    ArticleAdapter adapter;
+    PtrListView listView;
 
     @Override
-    public void initView() {
-        super.initView();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_article);
+
         setTitle("资讯");
-    }
 
-    @Override
-    protected Activity getCountContext() {
-        return this;
-    }
+        page = new Page();
+        presenter = new ArticlePresenter(this);
+        listView = (PtrListView) findViewById(R.id.lv_list);
+        adapter = new ArticleAdapter(context);
+        listView.setAdapter(adapter);
+        presenter.getArticles(page);
 
-    @Override
-    protected void getList() {
-        HttpHelper.getArticleList(page, new HttpResultHandler(CacheUtil.ARTICLE_LIST) {
+        listView.setRefresh(new PtrListView.OnRefresh() {
             @Override
-            public void onSuccess(Result result) {
-                requestSuccess(result,Article.class);
+            public void onRefresh() {
+                page.initPage();
+                presenter.getArticles(page);
             }
         });
+
+        listView.setLoadMore(new PtrListView.OnLoadMore() {
+            @Override
+            public void onLoadMore() {
+                if (page.hasMore()) {
+                    presenter.getArticles(page);
+                } else {
+                    requestEnd();
+                }
+            }
+        });
+
     }
 
     @Override
-    protected BaseAdapter getAdapter() {
-        return new ArticleAdapter(context);
+    public void getDataSuccess(Result result) {
+        Page<Article> resultPage = result.getPage(Article.class);
+        page.initPage(resultPage);
+        if (page.isRefresh()) {
+            LogUtil.log("refresh,need refresh is :" + result.isNeedRefresh());
+            if(result.isNeedRefresh()) {
+                adapter.refresh(page.getDataList());
+            }
+        } else {
+            adapter.loadMore(page.getDataList());
+        }
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //TODO
+    public void requestEnd() {
+        listView.loadDataComplete();
     }
 }

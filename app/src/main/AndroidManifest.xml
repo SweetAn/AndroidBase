@@ -79,6 +79,9 @@
         </intent-filter>
         </receiver>
 
+
+        <activity android:name=".view.BrowserActivity"></activity>
+
     </application>
 
 </manifest>

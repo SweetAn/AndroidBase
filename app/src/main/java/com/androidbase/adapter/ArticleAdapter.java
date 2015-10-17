@@ -3,79 +3,35 @@ package com.androidbase.adapter;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.androidbase.R;
+import com.androidbase.adapter.base.BaseAdapter;
+import com.androidbase.adapter.base.ViewHolder;
 import com.androidbase.entity.Article;
 import com.androidbase.entity.Tag;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class ArticleAdapter extends BaseAdapter {
 
-    private ArrayList<Article> list;
     private Context context;
 
     public ArticleAdapter(Context context) {
         this.context = context;
-        list = new ArrayList<Article>();
     }
 
     @Override
-    public void refresh(List list) {
-        this.list.clear();
-        this.list.addAll(list);
-        notifyDataSetChanged();
-    }
+    protected void initData(ViewHolder viewHolder, Object obj, int position) {
 
-    @Override
-    public void loadMore(List list) {
-        this.list.addAll(list);
-        notifyDataSetChanged();
-    }
+        final Article bean = (Article) list.get(position);
+        final Holder holder = (Holder) viewHolder;
 
 
-    @Override
-    public int getCount() {
-        return list.size();
-    }
-
-    @Override
-    public Article getItem(int arg0) {
-        return list.get(arg0);
-    }
-
-    @Override
-    public long getItemId(int arg0) {
-        return 0;
-    }
-
-    @Override
-    public View getView(final int position, View view, ViewGroup group) {
-        final Holder holder;
-        if (view == null) {
-            holder = new Holder();
-            LayoutInflater inflater = LayoutInflater.from(context);
-            view = inflater.inflate(R.layout.article_list_item, null);
-            holder.tvTitle = (TextView) view.findViewById(R.id.tv_title);
-            holder.tvDate = (TextView) view.findViewById(R.id.tv_date);
-            holder.ivIcon = (ImageView) view.findViewById(R.id.iv_image);
-            holder.vNiceTag = view.findViewById(R.id.v_nice_tag);
-            holder.llTags = (LinearLayout) view.findViewById(R.id.ll_tags);
-            view.setTag(holder);
-        } else {
-            holder = (Holder) view.getTag();
-        }
-        final Article bean = list.get(position);
         holder.tvTitle.setText(bean.getTitle());
 
         if (!TextUtils.isEmpty(bean.getImageUrl())) {
@@ -107,18 +63,35 @@ public class ArticleAdapter extends BaseAdapter {
         }
 
         String date = JSON.toJSONStringWithDateFormat(bean.getAddDt(), "yyyy-MM-dd");
-        holder.tvDate.setText(date.substring(1,date.length()-1));
+        holder.tvDate.setText(date.substring(1, date.length() - 1));
 
-        if(bean.isNice()){
+        if (bean.isNice()) {
             holder.vNiceTag.setVisibility(View.VISIBLE);
         } else {
             holder.vNiceTag.setVisibility(View.GONE);
         }
 
-        return view;
     }
 
-    class Holder {
+    @Override
+    protected int getViewRes() {
+        return R.layout.article_list_item;
+    }
+
+    @Override
+    protected ViewHolder initHolder() {
+
+        Holder holder = new Holder();
+        holder.tvTitle = findView(R.id.tv_title);
+        holder.tvDate = findView(R.id.tv_date);
+        holder.ivIcon = findView(R.id.iv_image);
+        holder.vNiceTag = findView(R.id.v_nice_tag);
+        holder.llTags = findView(R.id.ll_tags);
+
+        return holder;
+    }
+
+    class Holder extends ViewHolder {
         public TextView tvTitle;
         public TextView tvDate;
         public ImageView ivIcon;

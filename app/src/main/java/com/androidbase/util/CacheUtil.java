@@ -15,6 +15,9 @@ import com.commons.support.log.LogUtil;
  */
 public class CacheUtil {
 
+    public static final String ARTICLE_LIST = "article_list";
+
+
     private static boolean isDataEqualsCache(String cacheKey, String value) {
         String cacheValue = CacheDB.getCacheValue(cacheKey);
         if (cacheValue.equals(value)) {

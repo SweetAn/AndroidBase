@@ -10,8 +10,6 @@ import java.util.List;
 
 public class Page<E> implements Serializable {
 
-    private static final long serialVersionUID = -3111477306352964437L;
-
     @JSONField(name = "p")
     private int currentPage;
 
@@ -161,6 +159,10 @@ public class Page<E> implements Serializable {
 
     public List<E> getDataList() {
         return dataList;
+    }
+
+    public List<E> getList(){
+        return getDataList();
     }
 
     public void setDataList(List<E> dataList) {

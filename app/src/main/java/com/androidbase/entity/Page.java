@@ -169,10 +169,6 @@ public class Page<E> implements Serializable {
         this.dataList = dataList;
     }
 
-    public List<E> getList(){
-        return getDataList();
-    }
-
     public RequestParams getParams() {
         RequestParams params = new RequestParams();
         params.put(Constants.PARAM_PAGE, nextPage + "");

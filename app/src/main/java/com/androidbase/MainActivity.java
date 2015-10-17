@@ -1,16 +1,17 @@
 package com.androidbase;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
-import com.androidbase.commons.AppException;
+import com.androidbase.base.BaseNoInitDataActivity;
+import com.androidbase.util.LogUtil;
 import com.androidbase.view.ArticleListActivity;
 import com.androidbase.view.LoginActivity;
 import com.commons.support.db.config.Config;
 import com.commons.support.db.config.ConfigUtil;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseNoInitDataActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,29 +53,29 @@ public class MainActivity extends BaseActivity {
         ConfigUtil.save(new Config("test5", "this is a value5", "test5c1", "test5c2"));
         ConfigUtil.save(new Config("test6", "this is a value6", "test6c1", "test6c2"));
         String value = ConfigUtil.getConfigValue("test");
-        printLog("value is :" + value);
+        LogUtil.log("value is :" + value);
 
-//        HttpHelper.getInstance(context).dns502Test(new MAsyncHttpResponseHandler() {
-//            @Override
-//            public void onMSuccess(int statusCode, Header[] headers, String responseString, Result result) {
-//                LogUtil.log("0925..onMSuccess");
-//            }
-//            @Override
-//            public void onMFailure(int statusCode, Header[] headers, String responseString, @Nullable Result result, @Nullable Throwable throwable) {
-//                LogUtil.log("0925..onMFailure.statusCode=" + statusCode + ", throwable=" + throwable.toString());
-//            }
-//        });
-//
-//        try {
-//            testNull();
-//        } catch (AppException e) {}
 
     }
 
-    private void testNull() throws AppException {
-        TextView tv = null;
-        tv.setText("");
-        if(tv==null) throw new AppException("TextView is null!");
+    @Override
+    protected void initView() {
+
     }
 
+    @Override
+    protected Activity getCountContext() {
+        return null;
+    }
+
+
+    @Override
+    public int getViewRes() {
+        return 0;
+    }
+
+    @Override
+    public void onClick(View v) {
+
+    }
 }

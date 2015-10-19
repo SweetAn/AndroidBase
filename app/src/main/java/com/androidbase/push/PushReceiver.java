@@ -2,7 +2,9 @@ package com.androidbase.push;
 
 import android.content.Context;
 
+import com.alibaba.fastjson.JSON;
 import com.androidbase.commons.Constants;
+import com.androidbase.entity.Message;
 import com.commons.support.db.config.ConfigUtil;
 
 /**
@@ -10,12 +12,19 @@ import com.commons.support.db.config.ConfigUtil;
  */
 public class PushReceiver implements IPushReceiver {
 
-    private boolean isNotificationSelf;
-
     private static PushReceiver pushReceiver = new PushReceiver();
 
     public static PushReceiver getInstance(){
         return pushReceiver;
+    }
+
+
+    private boolean isNotificationSelf;
+
+    private IPushMessage iPushMessage;
+
+    public void setiPushMessage(IPushMessage iPushMessage){
+        this.iPushMessage = iPushMessage;
     }
 
     /**
@@ -37,18 +46,25 @@ public class PushReceiver implements IPushReceiver {
     @Override
     public void onReceivePassThroughMessage(String message) {
         PushMessage msg = PushMessage.parser(message);
-        if (msg != null) {
-            switch (msg.getUxid()) {
-                case 200:
-
-                    break;
-                case 201:
-
-
-                    break;
-                case 202:
-                    break;
-            }
+        // 发到ui线程
+        if (msg != null) switch (msg.getUxid()) {
+            case 200:
+                if (iPushMessage != null) {
+                    iPushMessage.message200();
+                }
+                break;
+            case 201:
+                if (iPushMessage != null) {
+                    Message getMsg = JSON.parseObject(msg.getData(), Message.class);
+                    iPushMessage.message201(getMsg);
+                }
+                break;
+            case 202:
+                if (iPushMessage != null) {
+                    Message getMsg = JSON.parseObject(msg.getData(), Message.class);
+                    iPushMessage.message202(msg.getRef(), getMsg);
+                }
+                break;
         }
     }
 

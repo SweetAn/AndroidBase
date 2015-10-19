@@ -39,6 +39,7 @@ public class PushReceiver implements IPushReceiver {
         PushMessage msg = PushMessage.parser(message);
         if (msg != null) {
             switch (msg.getUxid()) {
+
                 case 200:
 
                     break;

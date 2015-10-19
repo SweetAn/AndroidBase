@@ -4,8 +4,6 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.androidbase.commons.Constants;
-import com.commons.support.db.config.ConfigUtil;
 import com.xiaomi.mipush.sdk.ErrorCode;
 import com.xiaomi.mipush.sdk.MiPushClient;
 import com.xiaomi.mipush.sdk.MiPushCommandMessage;
@@ -32,10 +30,10 @@ public class MiPushMessageReceiver extends PushMessageReceiver {
     private String mStartTime;
     private String mEndTime;
 
-    public static void initMiPush(Context context){ // 配置小米推送，要根据登录状态设置这些
-        MiPushClient.setAlias(context, ConfigUtil.getConfigValue(Constants.PUSH_TOPIC), null); // 私有的topic，唯一
+    public static void initMiPush(Context context, String topic, String token){ // 配置小米推送，要根据登录状态设置这些
+        MiPushClient.setAlias(context, topic, null); // 私有的topic，唯一
         MiPushClient.setUserAccount(context, "account-test", null);
-        MiPushClient.subscribe(context, ConfigUtil.getConfigValue(Constants.PUSH_PUBLIC_TOKEN), null); // topic-组
+        MiPushClient.subscribe(context, token, null); // topic-组
         MiPushClient.setAcceptTime(context, 7, 0, 23, 0, null);
     }
 
@@ -49,6 +47,8 @@ public class MiPushMessageReceiver extends PushMessageReceiver {
         Log.v(TAG, "onReceivePassThroughMessage is called. " + miPushMessage.toString());
         Log.v(TAG, "onReceivePassThroughMessage getContent. " + miPushMessage.getContent());
 
+        PushReceiver.getInstance().onReceivePassThroughMessage(miPushMessage.getContent());
+
         if(!TextUtils.isEmpty(miPushMessage.getTopic())) {
             mTopic=miPushMessage.getTopic();
         } else if(!TextUtils.isEmpty(miPushMessage.getAlias())) {
@@ -60,6 +60,9 @@ public class MiPushMessageReceiver extends PushMessageReceiver {
     @Override
     public void onNotificationMessageClicked(Context context, MiPushMessage miPushMessage) {
         Log.v(TAG, "onNotificationMessageClicked is called. " + miPushMessage.toString());
+
+        PushReceiver.getInstance().onNotificationMessageClicked(miPushMessage.getContent());
+
         if(!TextUtils.isEmpty(miPushMessage.getTopic())) {
             mTopic=miPushMessage.getTopic();
         } else if(!TextUtils.isEmpty(miPushMessage.getAlias())) {
@@ -77,6 +80,9 @@ public class MiPushMessageReceiver extends PushMessageReceiver {
     @Override
     public void onNotificationMessageArrived(Context context, MiPushMessage miPushMessage) {
         Log.v(TAG, "onNotificationMessageArrived is called. " + miPushMessage.toString());
+
+        PushReceiver.getInstance().onNotificationMessageArrived(miPushMessage.getContent());
+
         if(!TextUtils.isEmpty(miPushMessage.getTopic())) {
             mTopic=miPushMessage.getTopic();
         } else if(!TextUtils.isEmpty(miPushMessage.getAlias())) {

@@ -23,7 +23,7 @@ public class PushReceiver implements IPushReceiver {
      */
     public static void initPush(Context context) {
         MiPushMessageReceiver.initMiPush(context, ConfigUtil.getConfigValue(Constants.PUSH_TOPIC)
-                , ConfigUtil.getConfigValue(Constants.PUSH_PUBLIC_TOKEN));
+                                                , ConfigUtil.getConfigValue(Constants.PUSH_PUBLIC_TOKEN));
     }
 
     /**

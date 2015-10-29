@@ -36,8 +36,10 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements I
         request();
     }
 
-    public <T extends View> T findView(@IdRes int id){
-        return (T)super.findViewById(id);
+    protected <T extends View> T $(@IdRes int id) {
+        T v = (T) findViewById(id);
+        v.setOnClickListener(this);
+        return v;
     }
 
     public void showToast(String msg) {
@@ -48,7 +50,7 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements I
         toast.show();
     }
 
-    protected boolean resultSuccess(Result result,boolean ... callRequestEnd){
+    protected boolean resultSuccess(Result result, boolean... callRequestEnd) {
         if (!result.isResult()) {
             showToast(result.getMsg());
         }
@@ -74,38 +76,30 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements I
     }
 
 
+    protected void init() {
+    }
+
     protected abstract void initView();
 
-    protected abstract Activity getCountContext();
-
-    public void init() {
-    }
-
-    protected boolean isSupportEvent() {
-        return false;
-    }
-
-    protected void onEvent(Object obj) {
+    public void onEvent(Object obj) {
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        CountUtil.onResume(getCountContext());
+        CountUtil.onResume(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        CountUtil.onPause(getCountContext());
+        CountUtil.onPause(this);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if (isSupportEvent()) {
-            EventUtil.register(this);
-        }
+        EventUtil.register(this);
     }
 
     @Override
@@ -118,12 +112,14 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements I
     @Override
     public void request() {
     }
+
     /**
      * 这些对于FragmentActivity不常用到，作为备选重写方法
      */
     @Override
     public void requestSuccess(Result result, Class... entity) {
     }
+
     @Override
     public void requestEnd() {
     }

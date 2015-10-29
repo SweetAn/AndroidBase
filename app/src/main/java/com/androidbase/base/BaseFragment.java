@@ -18,7 +18,7 @@ import com.androidbase.util.CountUtil;
 import com.commons.support.util.DialogUtil;
 import com.commons.support.util.EventUtil;
 
-public abstract class BaseFragment extends Fragment implements IBaseView,View.OnClickListener {
+public abstract class BaseFragment extends Fragment implements IBaseView, View.OnClickListener {
 
     public boolean isLoading = false;
     public Dialog loadingDialog;
@@ -32,11 +32,7 @@ public abstract class BaseFragment extends Fragment implements IBaseView,View.On
         loadingDialog = DialogUtil.createLoadingDialog(context, "加载中..");
     }
 
-    public <T extends View> T findView(@IdRes int id) {
-        return (T) view.findViewById(id);
-    }
-
-    public <T extends View> T findViewWithClick(@IdRes int id) {
+    protected <T extends View> T $(@IdRes int id) {
         T v = (T) view.findViewById(id);
         v.setOnClickListener(this);
         return v;
@@ -54,11 +50,11 @@ public abstract class BaseFragment extends Fragment implements IBaseView,View.On
         return view;
     }
 
-    public void startActivity(Class mClass) {
+    protected void startActivity(Class mClass) {
         startActivity(new Intent(context, mClass));
     }
 
-    public void showToast(String msg) {
+    protected void showToast(String msg) {
         if (TextUtils.isEmpty(msg)) {
             return;
         }
@@ -67,7 +63,7 @@ public abstract class BaseFragment extends Fragment implements IBaseView,View.On
         toast.show();
     }
 
-    protected boolean resultSuccess(Result result,boolean ... callRequestEnd){
+    protected boolean resultSuccess(Result result, boolean... callRequestEnd) {
         if (!result.isResult()) {
             showToast(result.getMsg());
         }
@@ -79,43 +75,32 @@ public abstract class BaseFragment extends Fragment implements IBaseView,View.On
         return result.isResult();
     }
 
+    protected void init() {
+    }
+
 
     protected abstract void initView(View view);
 
-    protected abstract String getCountViewTitle();
 
-    /**
-     * TODO 如果返回为 true 请重写 onEvent() 方法
-     * @return
-     */
-    protected boolean isSupportEvent() {
-        return false;
-    }
-
-    protected void onEvent(Object obj) {
-    }
-
-    protected void init(){
+    public void onEvent(Object obj) {
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        CountUtil.onPageStart(context, getCountViewTitle());
+        CountUtil.onPageStart(context, this.getClass().getName());
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        CountUtil.onPageEnd(context, getCountViewTitle());
+        CountUtil.onPageEnd(context, this.getClass().getName());
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if (isSupportEvent()) {
-            EventUtil.register(this);
-        }
+        EventUtil.register(this);
     }
 
     @Override

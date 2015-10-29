@@ -89,7 +89,6 @@ public abstract class BaseListActivity extends BaseActivity implements AdapterVi
     }
 
     protected abstract void getList();
-
     protected abstract BaseAdapter getAdapter();
 
     @Override

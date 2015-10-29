@@ -37,11 +37,7 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
         request();
     }
 
-    public <T extends View> T findView(@IdRes int id) {
-        return (T) super.findViewById(id);
-    }
-
-    public <T extends View> T findViewWithClick(@IdRes int id) {
+    public <T extends View> T $(@IdRes int id) {
         T view = (T) super.findViewById(id);
         view.setOnClickListener(this);
         return view;
@@ -92,13 +88,11 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
     protected void onResume() {
         super.onResume();
         CountUtil.onResume(this);
-        //LogUtil.log("onResume:" + this.getClass().getName());
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        //LogUtil.log("onPause:" + this.getClass().getName());
         CountUtil.onPause(this);
     }
 

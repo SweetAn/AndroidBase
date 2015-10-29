@@ -17,13 +17,10 @@ import android.widget.TextView;
 import com.androidbase.R;
 import com.androidbase.base.BaseNoInitDataActivity;
 import com.androidbase.presenter.LoginPresenter;
-import com.androidbase.util.CountUtil;
 import com.androidbase.view.iview.ILoginView;
 import com.commons.support.util.DialogUtil;
 
-import de.greenrobot.event.EventBus;
-
-public class LoginActivity extends BaseNoInitDataActivity implements ILoginView{
+public class LoginActivity extends BaseNoInitDataActivity implements ILoginView {
 
 
     private boolean pasType = false;
@@ -40,7 +37,6 @@ public class LoginActivity extends BaseNoInitDataActivity implements ILoginView{
     private int activateCnt = 0;
 
     LoginPresenter loginPresenter;
-
 
 
     Handler handler = new Handler(new Handler.Callback() {
@@ -73,13 +69,13 @@ public class LoginActivity extends BaseNoInitDataActivity implements ILoginView{
 
         loadingDialog = DialogUtil.createLoadingDialog(context, "登录中..");
 
-        final View llVerifyType = findViewById(R.id.ll_verify_type);
-        final View llPasType = findViewById(R.id.ll_pas_type);
+        final View llVerifyType = $(R.id.ll_verify_type);
+        final View llPasType = $(R.id.ll_pas_type);
         llPasType.setVisibility(View.GONE);
-        final TextView tv = (TextView) findViewById(R.id.btn_change_login_type);
-        btnNoGetVerCode = (TextView) findViewById(R.id.btn_no_get_ver_code);
+        final TextView tv = $(R.id.btn_change_login_type);
+        btnNoGetVerCode = $(R.id.btn_no_get_ver_code);
         btnNoGetVerCode.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
-        tvVerifyCode = (TextView) findViewById(R.id.btn_get_verify_code);
+        tvVerifyCode = $(R.id.btn_get_verify_code);
         tvVerifyCode.setVisibility(View.VISIBLE);
         tvVerifyCode.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,7 +122,7 @@ public class LoginActivity extends BaseNoInitDataActivity implements ILoginView{
         });
 
 
-        TextView btnRegister = (TextView) findViewById(R.id.btn_register);
+        TextView btnRegister = $(R.id.btn_register);
         //btnRegister.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,11 +132,11 @@ public class LoginActivity extends BaseNoInitDataActivity implements ILoginView{
         });
 
 
-        etPas = (EditText) findViewById(R.id.et_pas);
-        etPhone = (EditText) findViewById(R.id.et_phone);
-        etVerifyCode = (EditText) findViewById(R.id.et_verify);
+        etPas = $(R.id.et_pas);
+        etPhone = $(R.id.et_phone);
+        etVerifyCode = $(R.id.et_verify);
 
-        btnIsShowPas = (ImageView) findViewById(R.id.btn_is_show_pas);
+        btnIsShowPas = $(R.id.btn_is_show_pas);
         btnIsShowPas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -157,7 +153,7 @@ public class LoginActivity extends BaseNoInitDataActivity implements ILoginView{
             }
         });
 
-        findViewById(R.id.btn_login).setOnClickListener(new View.OnClickListener() {
+        $(R.id.btn_login).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (llVerifyType.getVisibility() == View.VISIBLE) {
@@ -174,7 +170,7 @@ public class LoginActivity extends BaseNoInitDataActivity implements ILoginView{
 
     @Override
     protected void initView() {
-        
+
     }
 
     private void smsObtainByVoice() {
@@ -200,12 +196,10 @@ public class LoginActivity extends BaseNoInitDataActivity implements ILoginView{
 
         etVerifyCode.requestFocus();
         tvVerifyCode.setEnabled(false);
-        final Dialog smsLoading = DialogUtil.createLoadingDialog(context,"获取中..");
+        final Dialog smsLoading = DialogUtil.createLoadingDialog(context, "获取中..");
         smsLoading.show();
 
     }
-
-
 
 
     private void phoneNumberLogin() {
@@ -221,7 +215,7 @@ public class LoginActivity extends BaseNoInitDataActivity implements ILoginView{
             return;
         }
 
-        if (isLoading){
+        if (isLoading) {
             return;
         }
 
@@ -245,41 +239,10 @@ public class LoginActivity extends BaseNoInitDataActivity implements ILoginView{
             return;
         }
 
-        if(isLoading) {
+        if (isLoading) {
             return;
         }
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        CountUtil.onResume(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        CountUtil.onPause(this);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
-
-    }
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this);
-        }
-    }
-
-    public void onEvent(Object obj) {
     }
 
     @Override

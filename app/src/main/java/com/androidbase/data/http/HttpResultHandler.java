@@ -31,7 +31,7 @@ public abstract class HttpResultHandler extends AsyncHttpResponseHandler {
     }
 
     public HttpResultHandler(String cacheKey, long timeout) {
-        initCache(cacheKey);
+        initCache(cacheKey, timeout);
     }
 
     public void initCache(String cacheKey) {

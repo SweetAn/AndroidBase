@@ -14,8 +14,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.androidbase.BaseActivity;
 import com.androidbase.R;
+import com.androidbase.base.BaseNoInitDataActivity;
 import com.androidbase.presenter.LoginPresenter;
 import com.androidbase.util.CountUtil;
 import com.androidbase.view.iview.ILoginView;
@@ -23,7 +23,7 @@ import com.commons.support.util.DialogUtil;
 
 import de.greenrobot.event.EventBus;
 
-public class LoginActivity extends BaseActivity implements ILoginView{
+public class LoginActivity extends BaseNoInitDataActivity implements ILoginView{
 
 
     private boolean pasType = false;
@@ -43,9 +43,9 @@ public class LoginActivity extends BaseActivity implements ILoginView{
 
 
 
-    Handler handler = new Handler() {
+    Handler handler = new Handler(new Handler.Callback() {
         @Override
-        public void handleMessage(Message msg) {
+        public boolean handleMessage(Message msg) {
             cnt--;
             if (cnt == 0) {
                 cnt = 60;
@@ -58,9 +58,9 @@ public class LoginActivity extends BaseActivity implements ILoginView{
                 tvVerifyCode.setText("重新获取 " + cnt + "秒");
                 handler.sendEmptyMessageDelayed(0, 1000);
             }
+            return true;
         }
-    };
-
+    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,6 +172,11 @@ public class LoginActivity extends BaseActivity implements ILoginView{
 
     }
 
+    @Override
+    protected void initView() {
+        
+    }
+
     private void smsObtainByVoice() {
 
         String phoneNumber = etPhone.getText().toString();
@@ -208,11 +213,11 @@ public class LoginActivity extends BaseActivity implements ILoginView{
         String phone = etPhone.getText().toString();
         String pas = etPas.getText().toString();
         if (TextUtils.isEmpty(phone)) {
-            showToastCenter("请输入手机号");
+            showToast("请输入手机号");
             return;
         }
         if (TextUtils.isEmpty(pas)) {
-            showToastCenter("请输入密码");
+            showToast("请输入密码");
             return;
         }
 
@@ -220,8 +225,7 @@ public class LoginActivity extends BaseActivity implements ILoginView{
             return;
         }
 
-        requestStart();
-        loginPresenter.login(phone,pas);
+        loginPresenter.login(phone, pas);
 
     }
 
@@ -289,5 +293,15 @@ public class LoginActivity extends BaseActivity implements ILoginView{
     public void loginFail(String msg) {
         requestEnd();
         showToast(msg);
+    }
+
+    @Override
+    public int getViewRes() {
+        return 0;
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 }

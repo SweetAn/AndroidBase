@@ -25,7 +25,7 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getViewRes() > 0)
+        if (getViewRes() > 0)
             setContentView(getViewRes());
         this.context = this;
         loadingDialog = DialogUtil.createLoadingDialog(context, "加载中..");
@@ -68,21 +68,15 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
         return titleBar;
     }
 
-    public void init() {
+    protected void init() {
     }
 
     protected abstract void initView();
 
-    protected abstract Activity getCountContext();
-
-    protected boolean isSupportEvent() {
-        return false;
+    public void onEvent(Object obj) {
     }
 
-    protected void onEvent(Object obj) {
-    }
-
-    protected boolean resultSuccess(Result result,boolean ... callRequestEnd){
+    protected boolean resultSuccess(Result result, boolean... callRequestEnd) {
         if (!result.isResult()) {
             showToast(result.getMsg());
         }
@@ -97,21 +91,21 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
     @Override
     protected void onResume() {
         super.onResume();
-        CountUtil.onResume(getCountContext());
+        CountUtil.onResume(this);
+        //LogUtil.log("onResume:" + this.getClass().getName());
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        CountUtil.onPause(getCountContext());
+        //LogUtil.log("onPause:" + this.getClass().getName());
+        CountUtil.onPause(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (isSupportEvent()) {
-            EventUtil.register(this);
-        }
+        EventUtil.register(this);
     }
 
     @Override

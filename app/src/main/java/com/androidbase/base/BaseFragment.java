@@ -6,15 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.androidbase.entity.Result;
 import com.androidbase.util.CountUtil;
+import com.androidbase.util.ToastUtil;
 import com.commons.support.util.DialogUtil;
 import com.commons.support.util.EventUtil;
 
@@ -55,12 +53,7 @@ public abstract class BaseFragment extends Fragment implements IBaseView, View.O
     }
 
     protected void showToast(String msg) {
-        if (TextUtils.isEmpty(msg)) {
-            return;
-        }
-        Toast toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
+        ToastUtil.showToast(context,msg);
     }
 
     protected boolean resultSuccess(Result result, boolean... callRequestEnd) {

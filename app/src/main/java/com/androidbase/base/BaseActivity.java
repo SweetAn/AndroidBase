@@ -5,13 +5,12 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.Toast;
 
 import com.androidbase.R;
 import com.androidbase.entity.Result;
 import com.androidbase.util.CountUtil;
+import com.androidbase.util.ToastUtil;
 import com.commons.support.util.DialogUtil;
 import com.commons.support.util.EventUtil;
 import com.commons.support.widget.TitleBar;
@@ -44,11 +43,7 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
     }
 
     public void showToast(String msg) {
-        if (TextUtils.isEmpty(msg)) {
-            return;
-        }
-        Toast toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT);
-        toast.show();
+        ToastUtil.showToast(context,msg);
     }
 
     public void startActivity(Class mClass) {

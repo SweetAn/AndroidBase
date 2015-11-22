@@ -5,12 +5,14 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.Toast;
 
 import com.androidbase.R;
 import com.androidbase.entity.Result;
 import com.androidbase.util.CountUtil;
-import com.androidbase.util.ToastUtil;
 import com.commons.support.util.DialogUtil;
 import com.commons.support.util.EventUtil;
 import com.commons.support.widget.TitleBar;
@@ -27,7 +29,7 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
         if (getViewRes() > 0)
             setContentView(getViewRes());
         this.context = this;
-        loadingDialog = DialogUtil.createLoadingDialog(context, "加载中..");
+        loadingDialog = DialogUtil.createLoadingDialog(context, getString(R.string.loading));
 
         //初始化操作
         init();
@@ -38,12 +40,18 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
 
     public <T extends View> T $(@IdRes int id) {
         T view = (T) super.findViewById(id);
-        view.setOnClickListener(this);
+        if (!(view instanceof AbsListView)) {
+            view.setOnClickListener(this);
+        }
         return view;
     }
 
     public void showToast(String msg) {
-        ToastUtil.showToast(context,msg);
+        if (TextUtils.isEmpty(msg)) {
+            return;
+        }
+        Toast toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     public void startActivity(Class mClass) {
@@ -59,13 +67,10 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
         return titleBar;
     }
 
-    protected void init() {
+    public void init() {
     }
 
     protected abstract void initView();
-
-    public void onEvent(Object obj) {
-    }
 
     protected boolean resultSuccess(Result result, boolean... callRequestEnd) {
         if (!result.isResult()) {
@@ -101,6 +106,11 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
     protected void onDestroy() {
         super.onDestroy();
         EventUtil.unregister(this);
+    }
+
+    public void onEvent(Object obj) {
+    }
+    public void onEventMainThread(Object obj) {
     }
 
 

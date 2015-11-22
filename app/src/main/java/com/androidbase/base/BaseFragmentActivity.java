@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.widget.AbsListView;
 
 import com.androidbase.R;
 import com.androidbase.entity.Result;
@@ -27,7 +28,7 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements I
         super.onCreate(savedInstanceState);
         setContentView(getViewRes());
         this.context = this;
-        loadingDialog = DialogUtil.createLoadingDialog(context, "加载中..");
+        loadingDialog = DialogUtil.createLoadingDialog(context, getString(R.string.loading));
 
         init();
 
@@ -35,10 +36,12 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements I
         request();
     }
 
-    protected <T extends View> T $(@IdRes int id) {
-        T v = (T) findViewById(id);
-        v.setOnClickListener(this);
-        return v;
+    public <T extends View> T $(@IdRes int id) {
+        T view = (T) super.findViewById(id);
+        if (!(view instanceof AbsListView)) {
+            view.setOnClickListener(this);
+        }
+        return view;
     }
 
     public void showToast(String msg) {

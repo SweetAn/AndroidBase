@@ -9,7 +9,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 
+import com.androidbase.R;
 import com.androidbase.entity.Result;
 import com.androidbase.util.CountUtil;
 import com.androidbase.util.ToastUtil;
@@ -27,13 +29,7 @@ public abstract class BaseFragment extends Fragment implements IBaseView, View.O
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.context = getActivity();
-        loadingDialog = DialogUtil.createLoadingDialog(context, "加载中..");
-    }
-
-    protected <T extends View> T $(@IdRes int id) {
-        T v = (T) view.findViewById(id);
-        v.setOnClickListener(this);
-        return v;
+        loadingDialog = DialogUtil.createLoadingDialog(context, getString(R.string.loading));
     }
 
     @Override
@@ -48,12 +44,20 @@ public abstract class BaseFragment extends Fragment implements IBaseView, View.O
         return view;
     }
 
+    public <T extends View> T $(@IdRes int id) {
+        T v = (T) view.findViewById(id);
+        if (!(v instanceof AbsListView)) {
+            v.setOnClickListener(this);
+        }
+        return v;
+    }
+
     protected void startActivity(Class mClass) {
         startActivity(new Intent(context, mClass));
     }
 
     protected void showToast(String msg) {
-        ToastUtil.showToast(context,msg);
+        ToastUtil.showToast(context, msg);
     }
 
     protected boolean resultSuccess(Result result, boolean... callRequestEnd) {
@@ -76,6 +80,9 @@ public abstract class BaseFragment extends Fragment implements IBaseView, View.O
 
 
     public void onEvent(Object obj) {
+    }
+
+    public void onEventMainThread(Object obj) {
     }
 
     @Override

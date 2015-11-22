@@ -3,7 +3,6 @@ package com.androidbase.view;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Paint;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -58,24 +57,22 @@ public class LoginActivity extends BaseNoInitDataActivity implements ILoginView 
         }
     });
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
 
+    @Override
+    protected void initView() {
         loginPresenter = new LoginPresenter(this);
 
         setTitle("登录/注册");
 
         loadingDialog = DialogUtil.createLoadingDialog(context, "登录中..");
 
-        final View llVerifyType = $(R.id.ll_verify_type);
-        final View llPasType = $(R.id.ll_pas_type);
+        final View llVerifyType = findViewById(R.id.ll_verify_type);
+        final View llPasType = findViewById(R.id.ll_pas_type);
         llPasType.setVisibility(View.GONE);
-        final TextView tv = $(R.id.btn_change_login_type);
-        btnNoGetVerCode = $(R.id.btn_no_get_ver_code);
+        final TextView tv = (TextView) findViewById(R.id.btn_change_login_type);
+        btnNoGetVerCode = (TextView) findViewById(R.id.btn_no_get_ver_code);
         btnNoGetVerCode.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
-        tvVerifyCode = $(R.id.btn_get_verify_code);
+        tvVerifyCode = (TextView) findViewById(R.id.btn_get_verify_code);
         tvVerifyCode.setVisibility(View.VISIBLE);
         tvVerifyCode.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,7 +119,7 @@ public class LoginActivity extends BaseNoInitDataActivity implements ILoginView 
         });
 
 
-        TextView btnRegister = $(R.id.btn_register);
+        TextView btnRegister = (TextView) findViewById(R.id.btn_register);
         //btnRegister.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,11 +129,11 @@ public class LoginActivity extends BaseNoInitDataActivity implements ILoginView 
         });
 
 
-        etPas = $(R.id.et_pas);
-        etPhone = $(R.id.et_phone);
-        etVerifyCode = $(R.id.et_verify);
+        etPas = (EditText) findViewById(R.id.et_pas);
+        etPhone = (EditText) findViewById(R.id.et_phone);
+        etVerifyCode = (EditText) findViewById(R.id.et_verify);
 
-        btnIsShowPas = $(R.id.btn_is_show_pas);
+        btnIsShowPas = (ImageView) findViewById(R.id.btn_is_show_pas);
         btnIsShowPas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,7 +150,7 @@ public class LoginActivity extends BaseNoInitDataActivity implements ILoginView 
             }
         });
 
-        $(R.id.btn_login).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btn_login).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (llVerifyType.getVisibility() == View.VISIBLE) {
@@ -164,12 +161,6 @@ public class LoginActivity extends BaseNoInitDataActivity implements ILoginView 
 
             }
         });
-
-
-    }
-
-    @Override
-    protected void initView() {
 
     }
 
@@ -245,6 +236,7 @@ public class LoginActivity extends BaseNoInitDataActivity implements ILoginView 
 
     }
 
+
     @Override
     public void loginSuccess() {
         //TODO 登录成功后，处理UI逻辑
@@ -260,11 +252,14 @@ public class LoginActivity extends BaseNoInitDataActivity implements ILoginView 
 
     @Override
     public int getViewRes() {
-        return 0;
+        return R.layout.activity_login;
     }
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()) {
+            case R.id.btn_login:
+                break;
+        }
     }
 }

@@ -19,8 +19,9 @@ public abstract class BaseAdapter extends android.widget.BaseAdapter {
     protected Context context;
     protected View view;
 
-    public BaseAdapter() {
+    public BaseAdapter(Context context) {
         list = new ArrayList<>();
+        this.context = context;
     }
 
     @Override

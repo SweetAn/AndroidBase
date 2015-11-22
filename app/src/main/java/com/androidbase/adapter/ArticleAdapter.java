@@ -20,7 +20,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 public class ArticleAdapter extends BaseAdapter {
 
     public ArticleAdapter(Context context) {
-        this.context = context;
+        super(context);
     }
 
     @Override

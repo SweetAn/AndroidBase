@@ -6,5 +6,6 @@
     <string name="use_verify_login">用手机号+验证码登录</string>
     <string name="use_pas_login">用手机号+密码登录</string>
     <string name="not_has_account">还没有帐号?</string>
+    <string name="loading">加载中..</string>
 
 </resources>

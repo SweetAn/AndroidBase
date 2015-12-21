@@ -28,7 +28,7 @@ public class EncryptionUtil {
             return md5;
         } catch (NoSuchAlgorithmException e) {
             Log.e("MD5", e.getLocalizedMessage());
-            return null;
+            return "";
         }
     }
 

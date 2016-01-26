@@ -6,19 +6,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.AbsListView;
 
+import com.androidbase.R;
 import com.androidbase.entity.Result;
 import com.androidbase.util.CountUtil;
+import com.androidbase.util.ToastUtil;
 import com.commons.support.util.DialogUtil;
 import com.commons.support.util.EventUtil;
 
-public abstract class BaseFragment extends Fragment implements IBaseView,View.OnClickListener {
+public abstract class BaseFragment extends Fragment implements IBaseView, View.OnClickListener {
 
     public boolean isLoading = false;
     public Dialog loadingDialog;
@@ -29,17 +29,7 @@ public abstract class BaseFragment extends Fragment implements IBaseView,View.On
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.context = getActivity();
-        loadingDialog = DialogUtil.createLoadingDialog(context, "加载中..");
-    }
-
-    public <T extends View> T findView(@IdRes int id) {
-        return (T) view.findViewById(id);
-    }
-
-    public <T extends View> T findViewWithClick(@IdRes int id) {
-        T v = (T) view.findViewById(id);
-        v.setOnClickListener(this);
-        return v;
+        loadingDialog = DialogUtil.createLoadingDialog(context, getString(R.string.loading));
     }
 
     @Override
@@ -54,20 +44,23 @@ public abstract class BaseFragment extends Fragment implements IBaseView,View.On
         return view;
     }
 
-    public void startActivity(Class mClass) {
+    public <T extends View> T $(@IdRes int id) {
+        T v = (T) view.findViewById(id);
+        if (!(v instanceof AbsListView)) {
+            v.setOnClickListener(this);
+        }
+        return v;
+    }
+
+    protected void startActivity(Class mClass) {
         startActivity(new Intent(context, mClass));
     }
 
-    public void showToast(String msg) {
-        if (TextUtils.isEmpty(msg)) {
-            return;
-        }
-        Toast toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
+    protected void showToast(String msg) {
+        ToastUtil.showToast(context, msg);
     }
 
-    protected boolean resultSuccess(Result result,boolean ... callRequestEnd){
+    protected boolean resultSuccess(Result result, boolean... callRequestEnd) {
         if (!result.isResult()) {
             showToast(result.getMsg());
         }
@@ -79,43 +72,35 @@ public abstract class BaseFragment extends Fragment implements IBaseView,View.On
         return result.isResult();
     }
 
+    protected void init() {
+    }
+
 
     protected abstract void initView(View view);
 
-    protected abstract String getCountViewTitle();
 
-    /**
-     * TODO 如果返回为 true 请重写 onEvent() 方法
-     * @return
-     */
-    protected boolean isSupportEvent() {
-        return false;
+    public void onEvent(Object obj) {
     }
 
-    protected void onEvent(Object obj) {
-    }
-
-    protected void init(){
+    public void onEventMainThread(Object obj) {
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        CountUtil.onPageStart(context, getCountViewTitle());
+        CountUtil.onPageStart(context, this.getClass().getName());
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        CountUtil.onPageEnd(context, getCountViewTitle());
+        CountUtil.onPageEnd(context, this.getClass().getName());
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if (isSupportEvent()) {
-            EventUtil.register(this);
-        }
+        EventUtil.register(this);
     }
 
     @Override

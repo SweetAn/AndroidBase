@@ -1,16 +1,15 @@
 package com.androidbase.model;
 
-import com.androidbase.data.http.HttpHelper;
-import com.androidbase.data.http.MAsyncHttpResponseHandler;
 import com.androidbase.model.imodel.ILoginModel;
 import com.androidbase.util.LogUtil;
+import com.commons.support.http.HttpResultHandler;
 
 /**
  * Created by qianjin on 2015/9/25.
  */
 public class LoginModel implements ILoginModel {
     @Override
-    public void login(String userName, String pas, final MAsyncHttpResponseHandler responseHandler) {
+    public void login(String userName, String pas, final HttpResultHandler responseHandler) {
 
 //        final String key = getCacheKey(Method.class);
 //        final String resultStr = ConfigUtil.getConfigValue(key);
@@ -35,8 +34,8 @@ public class LoginModel implements ILoginModel {
 //                responseHandler.onMFailure(statusCode, result, throwable);
 //            }
 //        });
-        responseHandler.initCache(getCacheKey("login"));
-        HttpHelper.login(userName, pas, responseHandler);
+//        responseHandler.initCache(getCacheKey("login"));
+//        HttpHelper.login(userName, pas, responseHandler);
 
     }
 

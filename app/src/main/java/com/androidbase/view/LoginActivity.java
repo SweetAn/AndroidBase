@@ -3,7 +3,6 @@ package com.androidbase.view;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Paint;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -14,16 +13,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.androidbase.BaseActivity;
 import com.androidbase.R;
+import com.androidbase.base.BaseNoInitDataActivity;
 import com.androidbase.presenter.LoginPresenter;
-import com.androidbase.util.CountUtil;
 import com.androidbase.view.iview.ILoginView;
 import com.commons.support.util.DialogUtil;
 
-import de.greenrobot.event.EventBus;
-
-public class LoginActivity extends BaseActivity implements ILoginView{
+public class LoginActivity extends BaseNoInitDataActivity implements ILoginView {
 
 
     private boolean pasType = false;
@@ -42,10 +38,9 @@ public class LoginActivity extends BaseActivity implements ILoginView{
     LoginPresenter loginPresenter;
 
 
-
-    Handler handler = new Handler() {
+    Handler handler = new Handler(new Handler.Callback() {
         @Override
-        public void handleMessage(Message msg) {
+        public boolean handleMessage(Message msg) {
             cnt--;
             if (cnt == 0) {
                 cnt = 60;
@@ -58,15 +53,13 @@ public class LoginActivity extends BaseActivity implements ILoginView{
                 tvVerifyCode.setText("重新获取 " + cnt + "秒");
                 handler.sendEmptyMessageDelayed(0, 1000);
             }
+            return true;
         }
-    };
+    });
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
+    protected void initView() {
         loginPresenter = new LoginPresenter(this);
 
         setTitle("登录/注册");
@@ -169,7 +162,6 @@ public class LoginActivity extends BaseActivity implements ILoginView{
             }
         });
 
-
     }
 
     private void smsObtainByVoice() {
@@ -195,12 +187,10 @@ public class LoginActivity extends BaseActivity implements ILoginView{
 
         etVerifyCode.requestFocus();
         tvVerifyCode.setEnabled(false);
-        final Dialog smsLoading = DialogUtil.createLoadingDialog(context,"获取中..");
+        final Dialog smsLoading = DialogUtil.createLoadingDialog(context, "获取中..");
         smsLoading.show();
 
     }
-
-
 
 
     private void phoneNumberLogin() {
@@ -208,20 +198,19 @@ public class LoginActivity extends BaseActivity implements ILoginView{
         String phone = etPhone.getText().toString();
         String pas = etPas.getText().toString();
         if (TextUtils.isEmpty(phone)) {
-            showToastCenter("请输入手机号");
+            showToast("请输入手机号");
             return;
         }
         if (TextUtils.isEmpty(pas)) {
-            showToastCenter("请输入密码");
+            showToast("请输入密码");
             return;
         }
 
-        if (isLoading){
+        if (isLoading) {
             return;
         }
 
-        requestStart();
-        loginPresenter.login(phone,pas);
+        loginPresenter.login(phone, pas);
 
     }
 
@@ -241,42 +230,12 @@ public class LoginActivity extends BaseActivity implements ILoginView{
             return;
         }
 
-        if(isLoading) {
+        if (isLoading) {
             return;
         }
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        CountUtil.onResume(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        CountUtil.onPause(this);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
-
-    }
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this);
-        }
-    }
-
-    public void onEvent(Object obj) {
-    }
 
     @Override
     public void loginSuccess() {
@@ -289,5 +248,18 @@ public class LoginActivity extends BaseActivity implements ILoginView{
     public void loginFail(String msg) {
         requestEnd();
         showToast(msg);
+    }
+
+    @Override
+    public int getViewRes() {
+        return R.layout.activity_login;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_login:
+                break;
+        }
     }
 }

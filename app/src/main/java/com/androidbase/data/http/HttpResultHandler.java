@@ -9,7 +9,7 @@ import com.commons.support.db.cache.CacheDB;
 import com.commons.support.entity.JSONUtil;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
-import cz.msebera.android.httpclient.Header;
+import org.apache.http.Header;
 
 
 /**
@@ -31,7 +31,7 @@ public abstract class HttpResultHandler extends AsyncHttpResponseHandler {
     }
 
     public HttpResultHandler(String cacheKey, long timeout) {
-        initCache(cacheKey);
+        initCache(cacheKey, timeout);
     }
 
     public void initCache(String cacheKey) {

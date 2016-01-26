@@ -1,6 +1,5 @@
 package com.androidbase.view;
 
-import android.app.Activity;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -23,12 +22,6 @@ public class ArticleListActivity extends BaseListActivity {
         super.initView();
         setTitle("资讯");
     }
-
-    @Override
-    protected Activity getCountContext() {
-        return this;
-    }
-
 
     @Override
     protected void getList() {

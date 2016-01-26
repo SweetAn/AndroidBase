@@ -1,6 +1,5 @@
 package com.androidbase.view;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
@@ -30,12 +29,6 @@ public class BrowserActivity extends BaseNoInitDataActivity{
 
     @Override
     protected void initView() {
-
-    }
-
-    @Override
-    protected Activity getCountContext() {
-        return null;
     }
 
     @Override

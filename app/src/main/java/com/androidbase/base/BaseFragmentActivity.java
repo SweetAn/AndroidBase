@@ -6,13 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.FragmentActivity;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.AbsListView;
 
 import com.androidbase.R;
 import com.androidbase.entity.Result;
 import com.androidbase.util.CountUtil;
+import com.androidbase.util.ToastUtil;
 import com.commons.support.util.DialogUtil;
 import com.commons.support.util.EventUtil;
 import com.commons.support.widget.TitleBar;
@@ -28,7 +28,7 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements I
         super.onCreate(savedInstanceState);
         setContentView(getViewRes());
         this.context = this;
-        loadingDialog = DialogUtil.createLoadingDialog(context, "加载中..");
+        loadingDialog = DialogUtil.createLoadingDialog(context, getString(R.string.loading));
 
         init();
 
@@ -36,19 +36,19 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements I
         request();
     }
 
-    public <T extends View> T findView(@IdRes int id){
-        return (T)super.findViewById(id);
+    public <T extends View> T $(@IdRes int id) {
+        T view = (T) super.findViewById(id);
+        if (!(view instanceof AbsListView)) {
+            view.setOnClickListener(this);
+        }
+        return view;
     }
 
     public void showToast(String msg) {
-        if (TextUtils.isEmpty(msg)) {
-            return;
-        }
-        Toast toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT);
-        toast.show();
+        ToastUtil.showToast(context, msg);
     }
 
-    protected boolean resultSuccess(Result result,boolean ... callRequestEnd){
+    protected boolean resultSuccess(Result result, boolean... callRequestEnd) {
         if (!result.isResult()) {
             showToast(result.getMsg());
         }
@@ -73,39 +73,30 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements I
         return titleBar;
     }
 
+    protected void init() {
+    }
 
     protected abstract void initView();
 
-    protected abstract Activity getCountContext();
-
-    public void init() {
-    }
-
-    protected boolean isSupportEvent() {
-        return false;
-    }
-
-    protected void onEvent(Object obj) {
+    public void onEvent(Object obj) {
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        CountUtil.onResume(getCountContext());
+        CountUtil.onResume(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        CountUtil.onPause(getCountContext());
+        CountUtil.onPause(this);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if (isSupportEvent()) {
-            EventUtil.register(this);
-        }
+        EventUtil.register(this);
     }
 
     @Override
@@ -118,12 +109,14 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements I
     @Override
     public void request() {
     }
+
     /**
      * 这些对于FragmentActivity不常用到，作为备选重写方法
      */
     @Override
     public void requestSuccess(Result result, Class... entity) {
     }
+
     @Override
     public void requestEnd() {
     }

@@ -7,13 +7,13 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.apache.http.Header;
 import org.apache.http.entity.StringEntity;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import cz.msebera.android.httpclient.Header;
 
 
 /**

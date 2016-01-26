@@ -13,8 +13,14 @@ import java.util.Date;
  * Created by qianjin on 2015/9/22.
  */
 public class FromatUtil {
+
     public static String formatDouble(double number) {
         return String.format("%.2f", number);
+    }
+
+    public static String getShowDouble(double number) {
+        java.text.DecimalFormat df = new java.text.DecimalFormat("#0.00");
+        return df.format(number);
     }
 
 

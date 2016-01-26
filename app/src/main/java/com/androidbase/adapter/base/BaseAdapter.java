@@ -19,8 +19,9 @@ public abstract class BaseAdapter extends android.widget.BaseAdapter {
     protected Context context;
     protected View view;
 
-    public BaseAdapter() {
+    public BaseAdapter(Context context) {
         list = new ArrayList<>();
+        this.context = context;
     }
 
     @Override
@@ -39,15 +40,13 @@ public abstract class BaseAdapter extends android.widget.BaseAdapter {
         return view;
     }
 
-    public <T extends View> T findView(@IdRes int id) {
+    public <T extends View> T $(@IdRes int id) {
         return (T) view.findViewById(id);
     }
 
     protected abstract void initData(ViewHolder viewHolder, Object obj, final int position);
 
-    protected abstract
-    @LayoutRes
-    int getViewRes();
+    protected abstract @LayoutRes int getViewRes();
 
     protected abstract ViewHolder initHolder();
 

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/tv_error"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="-20dp"
+        android:paddingTop="150dp"
+        android:paddingBottom="150dp"
+        android:gravity="center"
+        android:drawableTop="@drawable/fail_icon"
+        android:drawablePadding="15dp"
+        android:text="加载失败，点击屏幕重新加载"
+        android:textColor="@color/thin_black"
+        android:textSize="14sp"
+        android:visibility="gone"/>
+
+    <WebView
+        android:id="@+id/web_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"/>
+
+    <com.hrloo.mobile.widget.LoadingView
+        android:id="@+id/v_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        >
+    </com.hrloo.mobile.widget.LoadingView>
+
+</FrameLayout>

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.Toast;
 
 import com.androidbase.R;
@@ -25,10 +26,10 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getViewRes() > 0)
+        if (getViewRes() > 0)
             setContentView(getViewRes());
         this.context = this;
-        loadingDialog = DialogUtil.createLoadingDialog(context, "加载中..");
+        loadingDialog = DialogUtil.createLoadingDialog(context, getString(R.string.loading));
 
         //初始化操作
         init();
@@ -37,13 +38,11 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
         request();
     }
 
-    public <T extends View> T findView(@IdRes int id) {
-        return (T) super.findViewById(id);
-    }
-
-    public <T extends View> T findViewWithClick(@IdRes int id) {
+    public <T extends View> T $(@IdRes int id) {
         T view = (T) super.findViewById(id);
-        view.setOnClickListener(this);
+        if (!(view instanceof AbsListView)) {
+            view.setOnClickListener(this);
+        }
         return view;
     }
 
@@ -73,16 +72,7 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
 
     protected abstract void initView();
 
-    protected abstract Activity getCountContext();
-
-    protected boolean isSupportEvent() {
-        return false;
-    }
-
-    protected void onEvent(Object obj) {
-    }
-
-    protected boolean resultSuccess(Result result,boolean ... callRequestEnd){
+    protected boolean resultSuccess(Result result, boolean... callRequestEnd) {
         if (!result.isResult()) {
             showToast(result.getMsg());
         }
@@ -97,27 +87,30 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
     @Override
     protected void onResume() {
         super.onResume();
-        CountUtil.onResume(getCountContext());
+        CountUtil.onResume(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        CountUtil.onPause(getCountContext());
+        CountUtil.onPause(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (isSupportEvent()) {
-            EventUtil.register(this);
-        }
+        EventUtil.register(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         EventUtil.unregister(this);
+    }
+
+    public void onEvent(Object obj) {
+    }
+    public void onEventMainThread(Object obj) {
     }
 
 

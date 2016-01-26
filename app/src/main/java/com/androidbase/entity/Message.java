@@ -1,8 +1,7 @@
 package com.androidbase.entity;
 
 /**
- * Created by qianjin on 2015/5/12.
+ * Created by qianjin on 2015/10/19.
  */
-public class Message{
-
+public class Message {
 }

@@ -1,12 +1,9 @@
 package com.androidbase.presenter;
 
-import android.support.annotation.Nullable;
-
-import com.androidbase.data.http.MAsyncHttpResponseHandler;
-import com.androidbase.entity.Result;
 import com.androidbase.model.LoginModel;
 import com.androidbase.model.imodel.ILoginModel;
 import com.androidbase.view.iview.ILoginView;
+import com.commons.support.http.HttpResultHandler;
 
 /**
  * Created by qianjin on 2015/9/25.
@@ -23,20 +20,14 @@ public class LoginPresenter {
 
 
     public void login(String userName,String pas){
-        loginModel.login(userName, pas, new MAsyncHttpResponseHandler() {
+        loginModel.login(userName, pas, new HttpResultHandler() {
             @Override
-            public void onMSuccess(Result result) {
+            public void onSuccess(com.commons.support.entity.Result result) {
                 if (result.isResult()) {
                     loginView.loginSuccess();
                 } else {
                     loginView.loginFail(result.getMsg());
                 }
-            }
-            @Override
-            public void onMFailure(int statusCode, @Nullable Result result, @Nullable Throwable throwable) {
-                if(throwable!=null)
-                    throwable.printStackTrace();
-                loginView.loginFail("登录失败！");
             }
         });
     }

@@ -19,10 +19,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class ArticleAdapter extends BaseAdapter {
 
-    private Context context;
-
     public ArticleAdapter(Context context) {
-        this.context = context;
+        super(context);
     }
 
     @Override
@@ -30,7 +28,6 @@ public class ArticleAdapter extends BaseAdapter {
 
         final Article bean = (Article) list.get(position);
         final Holder holder = (Holder) viewHolder;
-
 
         holder.tvTitle.setText(bean.getTitle());
 
@@ -82,11 +79,11 @@ public class ArticleAdapter extends BaseAdapter {
     protected ViewHolder initHolder() {
 
         Holder holder = new Holder();
-        holder.tvTitle = findView(R.id.tv_title);
-        holder.tvDate = findView(R.id.tv_date);
-        holder.ivIcon = findView(R.id.iv_image);
-        holder.vNiceTag = findView(R.id.v_nice_tag);
-        holder.llTags = findView(R.id.ll_tags);
+        holder.tvTitle = $(R.id.tv_title);
+        holder.tvDate = $(R.id.tv_date);
+        holder.ivIcon = $(R.id.iv_image);
+        holder.vNiceTag = $(R.id.v_nice_tag);
+        holder.llTags = $(R.id.ll_tags);
 
         return holder;
     }

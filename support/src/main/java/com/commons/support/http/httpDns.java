@@ -7,6 +7,7 @@ import com.commons.support.db.config.ConfigUtil;
 import com.commons.support.log.LogUtil;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.TextHttpResponseHandler;
+
 import cz.msebera.android.httpclient.Header;
 
 
@@ -15,8 +16,11 @@ import cz.msebera.android.httpclient.Header;
  */
 public class httpDns {
     public static final String HTTP_DNS_HOST = "http://119.29.29.29/d?dn=";
+
     public static void initHost(final String host) {
+        LogUtil.log("call init host");
         AsyncHttpClient client = new AsyncHttpClient();
+        //client.setProxy("192.168.1.192",8888);
         client.get(HTTP_DNS_HOST + host, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -30,7 +34,8 @@ public class httpDns {
             }
         });
     }
-    public static String getHostIp(String host){
+
+    public static String getHostIp(String host) {
         String hostIp = ConfigUtil.getConfigValue(host);
         if (TextUtils.isEmpty(hostIp)) {
             hostIp = host;

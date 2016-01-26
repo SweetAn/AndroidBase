@@ -24,13 +24,7 @@ import com.commons.support.log.LogUtil;
 
 import java.io.File;
 import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Calendar;
 import java.util.List;
 
@@ -46,16 +40,10 @@ public class Utility {
     public static String getSource(Context context) {
         String source = "";
         try {
-            ApplicationInfo ai =
-                    context.getPackageManager().getApplicationInfo(context.getPackageName(),
-                            PackageManager.GET_META_DATA);
+            ApplicationInfo ai = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
             Bundle bundle = ai.metaData;
             source = bundle.getString("CHANNEL");
-            //LogUtil.log("source is :" + source);
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.e("Utility", "Failed to load meta-data, NameNotFound: " + e.getMessage());
-        } catch (NullPointerException e) {
-            Log.e("Utility", "Failed to load meta-data, NullPointer: " + e.getMessage());
+        } catch (Exception e) {
         }
         return source;
     }
@@ -277,81 +265,6 @@ public class Utility {
         return result;
     }
 
-
-    public static void saveObj(Object o, String fileName, Context context) {
-        try {
-            FileOutputStream fos = context.openFileOutput(fileName, Context.MODE_PRIVATE);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(o);
-            oos.flush();
-            oos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static Object loadObj(String fileName, Context context) {
-        Object object = null;
-        try {
-            FileInputStream fis = context.openFileInput(fileName);
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            object = ois.readObject();
-            ois.close();
-        } catch (Exception e) {
-            Log.e("Utility", e.getMessage(), e);
-        }
-        return object;
-    }
-
-    public static Object loadObjWithException(String fileName, Context context) throws Exception {
-        Object object = null;
-        FileInputStream fis = context.openFileInput(fileName);
-        ObjectInputStream ois = new ObjectInputStream(fis);
-        object = ois.readObject();
-        ois.close();
-        return object;
-    }
-
-
-    /**
-     * 序列化数据
-     *
-     * @param o
-     * @param file
-     */
-    public static void serializationOfObject(Object o, File file) {
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(o);
-            oos.flush();
-            oos.close();
-        } catch (IOException e) {
-            Log.e("Utility", e.getMessage(), e);
-        }
-    }
-
-    /**
-     * 反序列化数据
-     *
-     * @param file
-     * @return
-     */
-    public static Object deserializationOfObject(File file) {
-        if (!file.exists()) return null;
-        Object object = null;
-        try {
-            FileInputStream fis = new FileInputStream(file);
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            object = ois.readObject();
-            ois.close();
-        } catch (Exception e) {
-            Log.e("Utility", e.getMessage(), e);
-        }
-        return object;
-    }
 
     /**
      * 播放音效

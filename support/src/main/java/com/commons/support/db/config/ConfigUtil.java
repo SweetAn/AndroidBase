@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.commons.support.db.DaoUtil;
+import com.commons.support.entity.JSONUtil;
 
 import de.greenrobot.dao.query.DeleteQuery;
 import de.greenrobot.dao.query.QueryBuilder;
@@ -17,7 +18,6 @@ public class ConfigUtil {
 
     /**
      * 使用ConfigUtil前需init
-     *
      * @param context
      */
     public static void init(Context context) {
@@ -40,6 +40,11 @@ public class ConfigUtil {
         save(config);
     }
 
+    public static void save(String key, Object value) {
+        Config config = new Config(key, JSONUtil.toJSONString(value));
+        save(config);
+    }
+
     public static void save(String key, int value) {
         save(key, String.valueOf(value));
     }
@@ -48,24 +53,18 @@ public class ConfigUtil {
         save(key, String.valueOf(value));
     }
 
-    public static Config getConfig(String key) {
+    private static Config getConfig(String key) {
         QueryBuilder qb = configDao.queryBuilder();
         qb.where(ConfigDao.Properties.Key.eq(key));
         Config config = (Config) qb.unique();
         if (config == null) {
-            config = new Config(key, "no data");
+            config = new Config(key, "");
         }
         return config;
     }
 
     public static String getConfigValue(String key) {
-        QueryBuilder qb = configDao.queryBuilder();
-        qb.where(ConfigDao.Properties.Key.eq(key));
-        Config config = (Config) qb.unique();
-        if (config == null) {
-            return "";
-        }
-        return config.getValue();
+        return getConfig(key).getValue();
     }
 
 
@@ -93,9 +92,6 @@ public class ConfigUtil {
         QueryBuilder qb = configDao.queryBuilder();
         DeleteQuery bd = qb.where(ConfigDao.Properties.Key.eq(key)).buildDelete();
         bd.executeDeleteWithoutDetachingEntities();
-        //or
-        //Config config = getConfig(key);
-        //configDao.delete(config);
     }
 
     public static boolean exist(String key) {

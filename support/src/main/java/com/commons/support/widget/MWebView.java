@@ -16,17 +16,15 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.ZoomButtonsController;
 
 import com.commons.support.R;
 import com.commons.support.log.LogUtil;
 import com.commons.support.util.ConnectUtil;
 
-import java.lang.reflect.Field;
 import java.util.Map;
 
 /**
- * Created by qianjin on 2015/7/6.
+ * Created by qianjin on 2015/12/21.
  */
 public class MWebView extends FrameLayout {
 
@@ -90,6 +88,9 @@ public class MWebView extends FrameLayout {
         this.titleBar = titleBar;
     }
 
+    public WebView getWebView(){
+        return webView;
+    }
 
     private void initWebView() {
 
@@ -101,11 +102,7 @@ public class MWebView extends FrameLayout {
         ws.setLoadWithOverviewMode(true);
         ws.setDomStorageEnabled(true);
         ws.setAllowFileAccess(true);
-        if (Build.VERSION.SDK_INT >= 11) {
-            ws.setDisplayZoomControls(false);
-        } else {
-            setZoomControlGone(webView);
-        }
+        ws.setDisplayZoomControls(false);
 
         webView.setVisibility(View.INVISIBLE);
         webView.setEnabled(true);
@@ -160,7 +157,7 @@ public class MWebView extends FrameLayout {
                     context.startActivity(intent);
                 }
                 if (webViewClientListener != null) {
-                    webViewClientListener.shouldOverrideUrlLoading(view,url);
+                    webViewClientListener.shouldOverrideUrlLoading(view, url);
                 }
                 return true;
             }
@@ -175,31 +172,6 @@ public class MWebView extends FrameLayout {
         errorView();
         if (titleBar != null) {
             titleBar.setTitle("加载失败");
-        }
-    }
-
-
-    /**
-     * 隐藏缩放控件 适用于Android3.0以下版本
-     */
-    private static void setZoomControlGone(View view) {
-        Class classType;
-        Field field;
-        try {
-            classType = WebView.class;
-            field = classType.getDeclaredField("mZoomButtonsController");
-            field.setAccessible(true);
-            ZoomButtonsController mZoomButtonsController = new ZoomButtonsController(view);
-            mZoomButtonsController.getZoomControls().setVisibility(View.GONE);
-            try {
-                field.set(view, mZoomButtonsController);
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

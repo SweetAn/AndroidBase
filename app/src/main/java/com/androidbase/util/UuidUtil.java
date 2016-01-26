@@ -26,7 +26,6 @@ public class UuidUtil {
 
     public static final String UUID = "uuid";
 
-
     /**
      * 读UUID
      */

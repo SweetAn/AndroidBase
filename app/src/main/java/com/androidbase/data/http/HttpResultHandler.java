@@ -9,7 +9,7 @@ import com.commons.support.db.cache.CacheDB;
 import com.commons.support.entity.JSONUtil;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
-import cz.msebera.android.httpclient.Header;
+import org.apache.http.Header;
 
 
 /**

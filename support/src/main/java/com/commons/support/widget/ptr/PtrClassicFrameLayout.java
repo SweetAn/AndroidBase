@@ -3,9 +3,14 @@ package com.commons.support.widget.ptr;
 import android.content.Context;
 import android.util.AttributeSet;
 
+import com.commons.support.R;
+
 public class PtrClassicFrameLayout extends PtrFrameLayout {
 
-    private PtrClassicDefaultHeader mPtrClassicHeader;
+    private int[]imgs = {R.drawable.a1, R.drawable.a2, R.drawable.a3, R.drawable.a4, R.drawable.a5, R.drawable.a6, R.drawable.a7};
+    private int[]cycleImgs = {R.drawable.a7, R.drawable.a8};
+
+    private PtrClassicDefaultHeader2 mPtrClassicHeader;
 
     public PtrClassicFrameLayout(Context context) {
         super(context);
@@ -23,12 +28,12 @@ public class PtrClassicFrameLayout extends PtrFrameLayout {
     }
 
     private void initViews() {
-        mPtrClassicHeader = new PtrClassicDefaultHeader(getContext());
+        mPtrClassicHeader = new PtrClassicDefaultHeader2(getContext(), imgs, cycleImgs);
         setHeaderView(mPtrClassicHeader);
         addPtrUIHandler(mPtrClassicHeader);
     }
 
-    public PtrClassicDefaultHeader getHeader() {
+    public PtrClassicDefaultHeader2 getHeader() {
         return mPtrClassicHeader;
     }
 

@@ -55,6 +55,10 @@ public class PtrListView extends LinearLayout {
 
     }
 
+    public PtrClassicFrameLayout getPtrFrame(){
+        return ptrFrame;
+    }
+
     public void setTransparentBg(){
         if(listView!=null) listView.setBackgroundResource(R.color.transparent);
     }

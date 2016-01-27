@@ -20,7 +20,7 @@ ext {
     greenDaoVersion = '2.0.0'
     eventBusVersion = '2.4.0'
     universalImageLoaderVersion = '1.9.4'
-    androidAsyncHttpVersion = '1.4.9'
+    androidAsyncHttpVersion = '1.4.8'
     fastJsonVersion = '1.1.45.android'
     photoViewVersion = '1.2.3'
     androidSupportVersion = '22.2.0'

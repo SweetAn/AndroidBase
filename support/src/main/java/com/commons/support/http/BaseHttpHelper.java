@@ -3,7 +3,6 @@ package com.commons.support.http;
 import android.content.Context;
 
 import com.alibaba.fastjson.JSONObject;
-import com.commons.support.BuildConfig;
 import com.commons.support.util.BaseJava;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -56,21 +55,19 @@ public abstract class BaseHttpHelper extends BaseJava {
         URL_DEV = getDevUrl();
         URL_RELEASE = getReleaseUrl();
         headers = getHeaders();
-        setBaseUrl();
-    }
-
-
-    public abstract String getDevUrl();
-    public abstract String getReleaseUrl();
-    public abstract Map<String,String> getHeaders();
-
-    private static void setBaseUrl(){
-        if (BuildConfig.DEBUG) {
+        if (isDev()) {
             BASE_URL = URL_DEV;
         } else {
             BASE_URL = URL_RELEASE;
         }
     }
+
+
+    public abstract String getDevUrl();
+    public abstract String getReleaseUrl();
+    public abstract boolean isDev();
+    public abstract Map<String,String> getHeaders();
+
 
     // ----------- 基础访问 START ----------//
 

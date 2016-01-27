@@ -13,7 +13,6 @@ import android.view.View;
 
 import com.commons.support.R;
 import com.commons.support.entity.Result;
-import com.commons.support.http.HttpHelper;
 import com.commons.support.log.LogUtil;
 import com.commons.support.ui.UIHelper;
 import com.commons.support.util.DialogUtil;
@@ -29,7 +28,6 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
     public boolean isLoading = false;
     public Dialog loadingDialog;
     public Activity context;
-    public HttpHelper httpHelper;
 
 
     @Override
@@ -45,7 +43,6 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
 
         this.context = this;
 
-        httpHelper = HttpHelper.getInstance(context);
         loadingDialog = DialogUtil.createLoadingDialog(context, "加载中..");
 
         //初始化操作

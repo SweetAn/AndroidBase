@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.commons.support.entity.Result;
-import com.commons.support.http.HttpHelper;
 import com.commons.support.log.LogUtil;
 import com.commons.support.ui.UIHelper;
 import com.commons.support.util.DialogUtil;
@@ -30,14 +29,12 @@ public abstract class BaseFragment extends Fragment implements IBaseView, View.O
     public Dialog loadingDialog;
     public Activity context;
     private View view;
-    public HttpHelper httpHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.context = getActivity();
         loadingDialog = DialogUtil.createLoadingDialog(context, "加载中..");
-        httpHelper = HttpHelper.getInstance(context);
     }
 
     public <T extends View> T $(@IdRes int id) {

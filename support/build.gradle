@@ -123,7 +123,9 @@ dependencies {
     compile supportDependencies.support
     compile supportDependencies.eventbus
     compile supportDependencies.greendao
+    compile supportDependencies.picasso
     compile supportDependencies.imageLoader
+    compile supportDependencies.retrofit
     compile supportDependencies.asyncHttp
     compile supportDependencies.fastJson
 

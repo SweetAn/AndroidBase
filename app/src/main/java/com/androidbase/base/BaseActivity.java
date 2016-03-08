@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.androidbase.R;
 import com.androidbase.entity.Result;
+import com.androidbase.http.HttpHelper;
 import com.androidbase.util.CountUtil;
 import com.commons.support.util.DialogUtil;
 import com.commons.support.util.EventUtil;
@@ -22,6 +23,7 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
     public boolean isLoading = false;
     public Dialog loadingDialog;
     public Activity context;
+    public HttpHelper httpHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,7 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
         if (getViewRes() > 0)
             setContentView(getViewRes());
         this.context = this;
+        httpHelper = HttpHelper.getInstance(context);
         loadingDialog = DialogUtil.createLoadingDialog(context, getString(R.string.loading));
 
         //初始化操作
@@ -43,6 +46,11 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
         if (!(view instanceof AbsListView)) {
             view.setOnClickListener(this);
         }
+        return view;
+    }
+
+    public <T extends View> T $T(@IdRes int id) {
+        T view = (T) super.findViewById(id);
         return view;
     }
 

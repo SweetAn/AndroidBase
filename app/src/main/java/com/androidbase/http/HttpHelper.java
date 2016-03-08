@@ -2,118 +2,168 @@ package com.androidbase.http;
 
 import android.content.Context;
 
-import com.androidbase.commons.AppException;
-import com.loopj.android.http.AsyncHttpClient;
+import com.androidbase.BuildConfig;
+import com.androidbase.commons.Constants;
+import com.androidbase.entity.Page;
+import com.commons.support.db.config.ConfigUtil;
+import com.commons.support.http.BaseHttpHelper;
+import com.commons.support.util.Utility;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import org.apache.http.Header;
 import org.apache.http.entity.StringEntity;
+import org.json.JSONObject;
 
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-
+import java.io.File;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Created by qianjin on 2015/9/23.
+ * Created by qianjin on 2016/1/26.
  */
-public class HttpHelper {
+public class HttpHelper extends BaseHttpHelper {
 
-    private static final String contentType = "application/json;charset=UTF-8";
-    public static String BASE_URL_DEV = "http://api-test.365hr.com:8030/";
-    public static String BASE_URL = "http://api.365hr.com/";
-    private volatile static HttpHelper httpHelper;
-    private static Context context;
+    private static HttpHelper helper;
 
-    private final int RETRY_MAX_TIME_FOR_502 = 3;
+    Map<String, String> headers;
 
-    private HttpHelper (){}
+    public HttpHelper(Context context) {
+        super(context);
+        //TODO 做一些其它配置
+    }
+
     public static HttpHelper getInstance(Context context) {
-        if (httpHelper == null) {
-            synchronized (HttpHelper.class) {
-                if (httpHelper == null) {
-                    httpHelper = new HttpHelper();
-                }
+        if (helper == null) {
+            helper = new HttpHelper(context);
+        }
+        return helper;
+    }
+
+    @Override
+    public String getDevUrl() {
+        return "http://uatapi-dev.cbmweibao.eebochina.com:8030/1.0/";
+    }
+
+    @Override
+    public String getReleaseUrl() {
+        return "http://ubmapi.cbmweibao.eebochina.com/1.0/";
+    }
+
+    @Override
+    public boolean isDev() {
+        return !BuildConfig.API_ENV;
+    }
+
+
+    @Override
+    public Map<String, String> getHeaders() {
+        if (objectIsNull(headers)) {
+            headers = new HashMap<>();
+            headers.put("Keys", getUserKey());
+            headers.put("mfg", Utility.getSource(context));
+            headers.put("ver", Utility.getAppVersionName(context) + "," + Utility.getAppVersionCode(context));
+            headers.put("os", "1");
+        } else {
+            String keys = headers.get("Keys");
+            String userKey = getUserKey();
+            if (!keys.equals(userKey)) {
+                headers.put("Keys", userKey);
             }
         }
-        return httpHelper;
+        return headers;
     }
 
-    public AsyncHttpClient getClient() {
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.setTimeout(15 * 1000);
-        client.addHeader("os", "1");
-        client.setLoggingEnabled(false);
-        return client;
-    }
-
-
-    // ----------- 基础访问 START ----------//
-
-    public void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        getClient().get(url, params, responseHandler);
-    }
-
-    private void get(String url, AsyncHttpResponseHandler responseHandler) {
-        get(url, responseHandler, 0);
-//        getClient().get(url, responseHandler);
-    }
-    private void get(final String url, final AsyncHttpResponseHandler responseHandler, final int retryTime) {
-        if(retryTime >= RETRY_MAX_TIME_FOR_502) {
-            try {
-                throw new AppException(url, 502);
-            } catch (AppException e) {}
-            try {
-                new BufferedOutputStream(new FileOutputStream(""));
-            } catch (IOException e) {
-//                throw AppException.io(e);
-            }
-            return;
+    /**
+     * 参数编码
+     *
+     * @return
+     */
+    public static String encode(String s) {
+        if (s == null) {
+            return "";
         }
-        AsyncHttpResponseHandler rh = new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                responseHandler.onSuccess(statusCode,headers,responseBody);
-            }
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                if(statusCode==502) {
-                    this.sendRetryMessage(0); // 在主线程里，不能线程休眠
-                } else {
-                    responseHandler.onFailure(statusCode,headers,responseBody,error);
-                }
-            }
-            @Override
-            public void onRetry(int retryNo) {
-                get(url, responseHandler, (retryTime+1));
-            }
-        };
-
-        getClient().get(url, rh);
+        try {
+            return URLEncoder.encode(s, "UTF-8").replace("+", "%20").replace("*", "%2A")
+                    .replace("%7E", "~").replace("#", "%23");
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 
-    private void post(String url, StringEntity entity, AsyncHttpResponseHandler responseHandler) {
-        entity.setContentType("application/json;charset=UTF-8");
-        //getClient().post(context, url, entity, contentType, responseHandler);
+    private static String url(String url){
+        return BASE_URL + url;
     }
 
-    private void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        getClient().post(context, url, params, responseHandler);
+    public String getUserKey() {
+        return ConfigUtil.getConfigValue(Constants.KEY);
     }
 
-    private void post(String url, AsyncHttpResponseHandler responseHandler) {
-        getClient().post(url, responseHandler);
+    //---------------------------分隔线----------------------------//
+
+
+
+    // ------------ 七牛相关start-----------------//
+
+    /**
+     * 上传图片至七牛
+     *
+     * @param key
+     * @param imgfile
+     * @param token
+     * @return
+     */
+    public void uploadPicture(String key, String token, File imgfile, AsyncHttpResponseHandler handler) {
+        try {
+            RequestParams params = new RequestParams();
+            params.put("key", key);
+            params.put("token", token);
+            params.put("file", imgfile);
+            post("http://up.qiniu.com/", params, handler);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public void cancelAllRequests() {
-        getClient().cancelAllRequests(true);
+    /**
+     * 获取七牛上传token
+     *
+     * @return
+     * @throws Exception
+     */
+    public void getUploadToken(String picName, AsyncHttpResponseHandler handler) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("pic_name", picName);
+            json.put("retry_count", "1");
+            json.put("content_type", "user_photo");
+            StringEntity entity = new StringEntity(json.toString());
+            post(BASE_URL + "upload/get_token", entity, handler);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    // ----------- 基础访问 END ----------//
-
-    public void dns502Test(AsyncHttpResponseHandler handler){
-        get("http://www.shitoo.com/", handler);
+    public void getUploadTokens(String picNames, AsyncHttpResponseHandler handler) {
+        RequestParams params = new RequestParams();
+        params.put("pic_names", picNames);
+        params.put("retry_count", "1");
+        params.put("ticket_type", "threadpost");
+        get(BASE_URL + "upload/token/morepicture", params, handler);
     }
+
+    // ------------ 七牛相关end-----------------//
+
+    public void getFaqList(Page page,AsyncHttpResponseHandler handler){
+        get(url("faqlist/257"), page.getParams(), handler);
+    }
+
+    public void getArticleList(Page page,AsyncHttpResponseHandler handler){
+        get(url("articlelist/257"),page.getParams(),handler);
+    }
+
+    public void downloadApk(String url, AsyncHttpResponseHandler handler) {
+        get(url, handler);
+    }
+
 }

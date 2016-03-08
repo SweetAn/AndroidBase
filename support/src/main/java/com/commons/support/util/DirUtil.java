@@ -6,12 +6,21 @@ import java.io.File;
 
 public class DirUtil {
 
-  public static final String UUID_PATH = "/.androidbase/";
-  public static final String UUID_FILE_PATH = UUID_PATH + "ab_uuid";
-  public static final String ROOT_PATH = "/enyes/androidbase/";
+//  public static final String UUID_PATH = "/.androidbase/";
+//  public static final String UUID_FILE_PATH = UUID_PATH + "ab_uuid";
+//  public static final String ROOT_PATH = "/enyes/androidbase/";
+//  public static final String PHOTO_PATH = ROOT_PATH + "photo/";
+//  public static final String CACHE_PATH = ROOT_PATH + "cache/";
+//  public static final String LOG_PATH = ROOT_PATH + "log/";
+
+  public static final String UUID_PATH = "/.eebochina/";
+  public static final String UUID_FILE_PATH = UUID_PATH + "cbm_uuid";
+  public static final String ROOT_PATH = "/eebochina/cbm/";
   public static final String PHOTO_PATH = ROOT_PATH + "photo/";
   public static final String CACHE_PATH = ROOT_PATH + "cache/";
   public static final String LOG_PATH = ROOT_PATH + "log/";
+  public static final String SHARE_CONFIG_APTH = ROOT_PATH + "shareconfig/";
+
 
   public static boolean isCreateDir() {
     if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {

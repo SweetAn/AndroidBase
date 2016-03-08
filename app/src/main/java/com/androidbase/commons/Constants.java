@@ -13,4 +13,7 @@ public class Constants {
     // PushTopic
     public static final String PUSH_TOPIC = "push_topic";
 
+    // PushTopic
+    public static final String KEY = "keys";
+
 }

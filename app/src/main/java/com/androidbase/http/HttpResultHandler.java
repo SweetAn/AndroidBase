@@ -1,4 +1,4 @@
-package com.androidbase.data.http;
+package com.androidbase.http;
 
 import android.text.TextUtils;
 

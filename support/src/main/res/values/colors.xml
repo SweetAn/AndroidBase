@@ -54,21 +54,18 @@
     <color name="toast_bg">#33a9ff</color>
     <color name="url">#5984d2</color>
 
-    <color name="compare_bg">#fcf9ea</color>
-    <color name="pension_bg">#c5f1fd</color>
 
     <color name="blue">#61bbfd</color>
-    <color name="expert_bg">#333333</color>
-
-    <color name="pin_green">#00bb27</color>
-    <color name="pin_gray">#e5e5e5</color>
 
     <color name="txt_gray">#7b7b7b</color>
     <color name="expert_desc">#939191</color>
 
     <color name="bg_blue">#0092ff</color>
     <color name="bg_avatar">#80c9ff</color>
-    <color name="text_mine_item">#505151</color>
-    <color name="text_mine_item_info">#b7b7b7</color>
+
+    <color name="circle_deep">#aaaaaa</color>
+
+    <color name="half_transparent">#22ffffff</color>
+    <color name="half_black">#22000000</color>
 
 </resources>

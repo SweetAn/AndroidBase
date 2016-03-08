@@ -20,41 +20,67 @@ public abstract class BaseHttpHelper extends BaseJava {
 
     public static int TIME_OUT = 15;
     public static boolean SHOW_LOG = false;
-    private Map<String, String> headers;
     private static final String CONTENT_TYPE = "application/json;charset=UTF-8";
-    private Context context;
+    public Context context;
+    AsyncHttpClient client;
 
     public static String URL_DEV = "";
     public static String URL_RELEASE = "";
     public static String BASE_URL = "";
-
-    public void setClient(int timeout, Map<String, String> headers) {
-        TIME_OUT = timeout;
-        this.headers = headers;
-    }
 
     public static void setShowLog(boolean showLog) {
         SHOW_LOG = showLog;
     }
 
     private AsyncHttpClient getClient() {
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.setTimeout(TIME_OUT);
-        if (objectNotNull(headers)) {
-            for (String key : headers.keySet()) {
-                client.addHeader("key", headers.get(key));
-            }
+        if (objectIsNull(client)) {
+            client = new AsyncHttpClient();
+            client.setTimeout(TIME_OUT);
+            client.setLoggingEnabled(SHOW_LOG);
         }
-        client.setLoggingEnabled(SHOW_LOG);
+        clientSetHeader(client);
         return client;
     }
 
+    public void clientSetHeader(AsyncHttpClient client) {
+        Map<String,String> headers = getHeaders();
+        if (objectNotNull(headers)) {
+            for (String key : headers.keySet()) {
+                String value = headers.get(key);
+                if (strNotEmpty(value)) {
+                    client.addHeader(key, headers.get(key));
+                }
+            }
+        } else {
+            client.removeAllHeaders();
+        }
 
-    public BaseHttpHelper (Context context) {
+
+//        if (retryGetHeader >= 1) {
+//            return;
+//        }
+//        if (objectNotNull(headers)) {
+//            for (String key : headers.keySet()) {
+//                String value = headers.get(key);
+//                if (strNotEmpty(value)) {
+//                    client.addHeader(key, headers.get(key));
+//                } else {
+//                    client.removeAllHeaders();
+//                    retryGetHeader = 1;
+//                    headers = getHeaders();
+//                    clientSetHeader(client);
+//                    break;
+//                }
+//            }
+//            retryGetHeader = 0;
+//        }
+    }
+
+
+    public BaseHttpHelper(Context context) {
         this.context = context;
         URL_DEV = getDevUrl();
         URL_RELEASE = getReleaseUrl();
-        headers = getHeaders();
         if (isDev()) {
             BASE_URL = URL_DEV;
         } else {
@@ -64,9 +90,12 @@ public abstract class BaseHttpHelper extends BaseJava {
 
 
     public abstract String getDevUrl();
+
     public abstract String getReleaseUrl();
+
     public abstract boolean isDev();
-    public abstract Map<String,String> getHeaders();
+
+    public abstract Map<String, String> getHeaders();
 
 
     // ----------- 基础访问 START ----------//
@@ -121,7 +150,7 @@ public abstract class BaseHttpHelper extends BaseJava {
     public String getPostJson(Map<String, String> params) {
         JSONObject json = new JSONObject();
         for (String key : params.keySet()) {
-            json.put(key,params.get(key));
+            json.put(key, params.get(key));
         }
         return json.toJSONString();
     }

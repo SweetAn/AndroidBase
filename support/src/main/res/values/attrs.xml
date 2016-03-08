@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <declare-styleable name="CircleIndicator">
+        <attr name="selectColor" format="color"/>
+        <attr name="notselectColor" format="color"/>
+        <attr name="pointNum" format="integer"/>
+        <attr name="pointPadding" format="dimension"/>
+    </declare-styleable>
+
     <declare-styleable name="HorizontalListView">
         <attr name="dividerWidth" format="dimension"/>
         <attr name="android:divider"/>

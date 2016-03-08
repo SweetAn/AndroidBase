@@ -77,7 +77,6 @@ public class UIHelper {
     public static void delayedClick(final View v,long time){
         v.setClickable(false);
         v.postDelayed(new Runnable() {//防止多次点击触发多次，导致动画不流畅
-
             @Override
             public void run() {
                 v.setClickable(true);

@@ -1,6 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
+             xmlns:tools="http://schemas.android.com/tools"
     >
 
 
@@ -37,7 +38,7 @@
                 android:textColor="@color/thin_black"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:text="试测试测试测试"
+                tools:text="试测试测试测试"
                 android:textSize="16sp"/>
 
 
@@ -66,7 +67,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/gray_white"
-                    android:text="2015-12"
+                    tools:text="2015-12"
                     android:textSize="12sp"/>
 
             </LinearLayout>

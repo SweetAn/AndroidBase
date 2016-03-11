@@ -22,7 +22,7 @@ public class UIHelper {
             Class<?> clazz = o.getClass();
             ContentView contentView = clazz.getAnnotation(ContentView.class);
             if (contentView != null) {
-                return contentView.value();
+                return contentView.layoutResValue();
             }
         } catch (Exception e) {
             e.printStackTrace();

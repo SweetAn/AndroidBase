@@ -14,6 +14,7 @@ import android.view.View;
 
 import com.commons.support.R;
 import com.commons.support.entity.Result;
+import com.commons.support.log.LogUtil;
 import com.commons.support.ui.UIHelper;
 import com.commons.support.util.DialogUtil;
 import com.commons.support.util.EventUtil;
@@ -32,16 +33,20 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements I
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (UIHelper.getContentViewRes(this) > 0) {
-            setContentView(UIHelper.getContentViewRes(this));
+        int contentValueRes = UIHelper.getContentViewRes(this);
+        if (contentValueRes > 0) {
+            setContentView(contentValueRes);
         } else if (getViewRes() > 0) {
             setContentView(getViewRes());
         } else {
-            throw new IllegalArgumentException("请至少用一种方法设置视图id，复写getViewRes或在类名上方加注解ContentView！");
+            LogUtil.e(this.getClass().getSimpleName(), "当前activity未设置layout");
         }
-        this.context = this;
-        loadingDialog = DialogUtil.createLoadingDialog(context, "加载中..");
 
+        this.context = this;
+
+        loadingDialog = DialogUtil.createLoadingDialog(context, getString(R.string.loading));
+
+        //初始化操作
         init();
 
         initView();
@@ -53,6 +58,39 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements I
         return 0;
     }
 
+
+    public void init() {
+        LogUtil.log("Activity class name is : " + context.getClass().getName());
+    }
+
+    protected abstract void initView();
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventUtil.register(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventUtil.unregister(this);
+    }
+
+    /**
+     * EventBus写onEvent时避免写错，直接Override
+     */
+    public void onEvent(Object obj) {
+    }
+
+    /**
+     * *****************************************以上是Activity自带方法*********************************************
+     */
+
+
+    /**
+     * ************UI帮助类*****************
+     */
     public <T extends View> T $(@IdRes int id) {
         return UIHelper.$(this, id, this);
     }
@@ -61,6 +99,51 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements I
         return UIHelper.$T(this, id);
     }
 
+    public void showToast(String msg) {
+        UIHelper.showToast(context, msg);
+    }
+
+    public void setTitle(String title) {
+        getTitleBar().setTitle(title);
+    }
+
+    public TitleBar getTitleBar() {
+        return $(R.id.v_title);
+    }
+
+    public View inflate(@LayoutRes int layout) {
+        return LayoutInflater.from(this).inflate(layout, null);
+    }
+
+    public void startActivity(Class mClass) {
+        startActivity(new Intent(context, mClass));
+    }
+
+    public void startActivity(Context context, Class<?> cls, @Nullable Map<String, Serializable> extras) {
+        Intent intent = new Intent(context, cls);
+        if (!(context instanceof Activity)) {
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+        if (extras != null && extras.size() > 0)
+            for (String key : extras.keySet()) {
+                intent.putExtra(key, extras.get(key));
+            }
+        context.startActivity(intent);
+    }
+
+    public void startActivity(Context context, Class<?> cls, String key, Serializable value) {
+        Intent intent = new Intent(context, cls);
+        if (!(context instanceof Activity)) {
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+        intent.putExtra(key, value);
+        context.startActivity(intent);
+    }
+
+
+    /**
+     * ********************Java帮助类*****************************
+     */
     public boolean objectNotNull(Object object) {
         if (object == null) {
             return false;
@@ -73,51 +156,44 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements I
     }
 
     public boolean strNotEmpty(String str) {
-        if (str == null || str.length() == 0) {
+        if (objectIsNull(str) || str.length() == 0) {
             return false;
         }
         return true;
+    }
+
+    public boolean strIsEmpty(String str) {
+        return !strNotEmpty(str);
     }
 
     public boolean listNotEmpty(List list) {
-        if (list == null || list.size() == 0) {
+        if (objectIsNull(list) || list.size() == 0) {
             return false;
         }
         return true;
     }
 
+    public boolean listIsEmpty(List list) {
+        return !listNotEmpty(list);
+    }
+
+    /**
+     * *********************数据处理帮助类***********************
+     */
     public <T extends Serializable> T getSerializableExtra(String key) {
         return (T) getIntent().getSerializableExtra(key);
     }
 
-    public View inflate(@LayoutRes int layout) {
-        return LayoutInflater.from(this).inflate(layout, null);
+    public int getIntExtra(String key) {
+        return getIntent().getIntExtra(key, 0);
     }
 
-    public void start(Context context, Class<?> cls, @Nullable Map<String, Serializable> extras) {
-        Intent intent = new Intent(context, cls);
-        if (!(context instanceof Activity)) {
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        }
-        if (extras != null && extras.size() > 0)
-            for (String key : extras.keySet()) {
-                intent.putExtra(key, extras.get(key));
-            }
-        context.startActivity(intent);
+    public String getStringExtra(String key) {
+        return getIntent().getStringExtra(key);
     }
 
-    public void start(Context context, Class<?> cls, String key, Serializable value) {
-        Intent intent = new Intent(context, cls);
-        if (!(context instanceof Activity)) {
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        }
-        intent.putExtra(key, value);
-        context.startActivity(intent);
-    }
-
-
-    public void showToast(String msg) {
-        UIHelper.showToast(context, msg);
+    public boolean getBooleanExtra(String key) {
+        return getIntent().getBooleanExtra(key, false);
     }
 
     protected boolean resultSuccess(Result result, boolean... callRequestEnd) {
@@ -132,53 +208,4 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements I
         return result.isResult();
     }
 
-    public void startActivity(Class mClass) {
-        startActivity(new Intent(context, mClass));
-    }
-
-    public void setTitle(String title) {
-        getTitleBar().setTitle(title);
-    }
-
-    public TitleBar getTitleBar() {
-        TitleBar titleBar = (TitleBar) findViewById(R.id.v_title);
-        return titleBar;
-    }
-
-
-    protected abstract void initView();
-
-    public void init() {
-    }
-
-    public void onEvent(Object obj) {
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventUtil.register(this);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventUtil.unregister(this);
-    }
-
-
-    @Override
-    public void request() {
-    }
-
-    /**
-     * 这些对于FragmentActivity不常用到，作为备选重写方法
-     */
-    @Override
-    public void requestSuccess(Result result, Class... entity) {
-    }
-
-    @Override
-    public void requestEnd() {
-    }
 }

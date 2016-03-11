@@ -29,12 +29,12 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
     public Dialog loadingDialog;
     public Activity context;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (UIHelper.getContentViewRes(this) > 0) {
-            setContentView(UIHelper.getContentViewRes(this));
+        int contentValueRes = UIHelper.getContentViewRes(this);
+        if (contentValueRes > 0) {
+            setContentView(contentValueRes);
         } else if (getViewRes() > 0) {
             setContentView(getViewRes());
         } else {
@@ -43,7 +43,7 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
 
         this.context = this;
 
-        loadingDialog = DialogUtil.createLoadingDialog(context, "加载中..");
+        loadingDialog = DialogUtil.createLoadingDialog(context, getString(R.string.loading));
 
         //初始化操作
         init();
@@ -52,12 +52,44 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
         request();
     }
 
-
     @Override
     public int getViewRes() {
         return 0;
     }
 
+
+    public void init() {
+        LogUtil.log("Activity class name is : " + context.getClass().getName());
+    }
+
+    protected abstract void initView();
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventUtil.register(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventUtil.unregister(this);
+    }
+
+    /**
+     * EventBus写onEvent时避免写错，直接Override
+     */
+    public void onEvent(Object obj) {
+    }
+
+    /**
+     * *****************************************以上是Activity自带方法*********************************************
+     */
+
+
+    /**
+     * ************UI帮助类*****************
+     */
     public <T extends View> T $(@IdRes int id) {
         return UIHelper.$(this, id, this);
     }
@@ -70,28 +102,47 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
         UIHelper.showToast(context, msg);
     }
 
-    public void startActivity(Class mClass) {
-        startActivity(new Intent(context, mClass));
-    }
-
     public void setTitle(String title) {
         getTitleBar().setTitle(title);
     }
 
     public TitleBar getTitleBar() {
-        TitleBar titleBar = (TitleBar) findViewById(R.id.v_title);
-        return titleBar;
+        return $(R.id.v_title);
     }
 
-    public void init() {
-        LogUtil.log("class name activity: " + context.getClass().getName());
+    public View inflate(@LayoutRes int layout) {
+        return LayoutInflater.from(this).inflate(layout, null);
     }
 
-    protected abstract void initView();
-
-    public void onEvent(Object obj) {
+    public void startActivity(Class mClass) {
+        startActivity(new Intent(context, mClass));
     }
 
+    public void startActivity(Context context, Class<?> cls, @Nullable Map<String, Serializable> extras) {
+        Intent intent = new Intent(context, cls);
+        if (!(context instanceof Activity)) {
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+        if (extras != null && extras.size() > 0)
+            for (String key : extras.keySet()) {
+                intent.putExtra(key, extras.get(key));
+            }
+        context.startActivity(intent);
+    }
+
+    public void startActivity(Context context, Class<?> cls, String key, Serializable value) {
+        Intent intent = new Intent(context, cls);
+        if (!(context instanceof Activity)) {
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+        intent.putExtra(key, value);
+        context.startActivity(intent);
+    }
+
+
+    /**
+     * ********************Java帮助类*****************************
+     */
     public boolean objectNotNull(Object object) {
         if (object == null) {
             return false;
@@ -104,7 +155,10 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
     }
 
     public boolean strNotEmpty(String str) {
-        return !(str == null || str.length() == 0);
+        if (objectIsNull(str) || str.length() == 0) {
+            return false;
+        }
+        return true;
     }
 
     public boolean strIsEmpty(String str) {
@@ -112,12 +166,19 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
     }
 
     public boolean listNotEmpty(List list) {
-        if (list == null || list.size() == 0) {
+        if (objectIsNull(list) || list.size() == 0) {
             return false;
         }
         return true;
     }
 
+    public boolean listIsEmpty(List list) {
+        return !listNotEmpty(list);
+    }
+
+    /**
+     * *********************数据处理帮助类***********************
+     */
     public <T extends Serializable> T getSerializableExtra(String key) {
         return (T) getIntent().getSerializableExtra(key);
     }
@@ -126,29 +187,12 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
         return getIntent().getIntExtra(key, 0);
     }
 
-    public View inflate(@LayoutRes int layout) {
-        return LayoutInflater.from(this).inflate(layout, null);
+    public String getStringExtra(String key) {
+        return getIntent().getStringExtra(key);
     }
 
-    public void start(Context context, Class<?> cls, @Nullable Map<String, Serializable> extras) {
-        Intent intent = new Intent(context, cls);
-        if (!(context instanceof Activity)) {
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        }
-        if (extras != null && extras.size() > 0)
-            for (String key : extras.keySet()) {
-                intent.putExtra(key, extras.get(key));
-            }
-        context.startActivity(intent);
-    }
-
-    public void start(Context context, Class<?> cls, String key, Serializable value) {
-        Intent intent = new Intent(context, cls);
-        if (!(context instanceof Activity)) {
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        }
-        intent.putExtra(key, value);
-        context.startActivity(intent);
+    public boolean getBooleanExtra(String key) {
+        return getIntent().getBooleanExtra(key, false);
     }
 
     protected boolean resultSuccess(Result result, boolean... callRequestEnd) {
@@ -164,17 +208,6 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
     }
 
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        EventUtil.register(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventUtil.unregister(this);
-    }
 
 
 }

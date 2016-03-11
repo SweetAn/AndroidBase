@@ -8,7 +8,6 @@ import com.commons.support.R;
 import com.commons.support.entity.Page;
 import com.commons.support.entity.Result;
 import com.commons.support.http.HttpResultHandler;
-import com.commons.support.log.LogUtil;
 import com.commons.support.ui.adapter.BaseAdapter;
 import com.commons.support.widget.ptr.PtrListView;
 
@@ -72,7 +71,6 @@ public abstract class BaseListFragment extends BaseFragment implements AdapterVi
     public void requestSuccess(Result result, Class... entity) {
         if (result.isResult()) {
             Page resultPage = result.getPage(entity[0]);
-            LogUtil.log("TotalPage.requestSuccess.CurrentPage=" + resultPage.getCurrentPage());
             if (resultPage != null) {
                 page.initPage(resultPage);
                 if (page.isRefresh()) {

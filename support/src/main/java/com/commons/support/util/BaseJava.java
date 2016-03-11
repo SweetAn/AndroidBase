@@ -19,7 +19,10 @@ public class BaseJava {
     }
 
     public static boolean strNotEmpty(String str) {
-        return !(str == null || str.length() == 0);
+        if (objectIsNull(str) || str.length() == 0) {
+            return false;
+        }
+        return true;
     }
 
     public static boolean strIsEmpty(String str) {
@@ -27,7 +30,7 @@ public class BaseJava {
     }
 
     public static boolean listNotEmpty(List list) {
-        if (list == null || list.size() == 0) {
+        if (objectIsNull(list) || list.size() == 0) {
             return false;
         }
         return true;

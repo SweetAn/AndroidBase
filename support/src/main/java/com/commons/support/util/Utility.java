@@ -135,19 +135,12 @@ public class Utility {
 
     /**
      * 获得Banner广告的高
-     *
-     * @param context
-     * @return
      */
     public static int getBannerAdHeight(Context context) {
-
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display d = wm.getDefaultDisplay();
-        // System.out.println("屏幕宽度："+d.getWidth()+" 广告位高度："+(int) (d.getWidth() / 2.5));
         //1024 * 410
         int height = (int) (d.getWidth() * 410.0 / 1024);
-        //return (int) (d.getHeight() / 4);
-        //return dip2px(context, 150);
         return height;
 
     }
@@ -163,9 +156,6 @@ public class Utility {
             PackageManager pm = context.getPackageManager();
             PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
             versionName = pi.versionName;
-            if (versionName == null || versionName.length() <= 0) {
-                return "";
-            }
         } catch (Exception e) {
             Log.e("VersionInfo", "Exception", e);
         }
@@ -230,7 +220,6 @@ public class Utility {
 
     /**
      * 检查系统中是否已安装某APP
-     *
      * @param context
      */
     public static boolean isAppInstalled(Context context, String packageName) {
@@ -255,8 +244,8 @@ public class Utility {
         String result = "";
         try {
             InputStream in = context.getResources().getAssets().open(fileName);
-            int lenght = in.available();
-            byte[] buffer = new byte[lenght];
+            int length = in.available();
+            byte[] buffer = new byte[length];
             in.read(buffer);
             result = new String(buffer, "utf-8");
         } catch (Exception e) {

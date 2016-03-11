@@ -11,6 +11,7 @@ import com.commons.support.img.ImageLoader;
  */
 public class AllConfig {
 
+    //所有初始化操作
     public static void init(Context context) {
         //init db
         DaoUtil.init(context);
@@ -22,19 +23,5 @@ public class AllConfig {
         CustomCrashHandler mCustomCrashHandler = CustomCrashHandler.getInstance();
         mCustomCrashHandler.setCustomCrashHanler(context);
 
-        //init push
-        //MiPushMessageReceiver.initMiPush(context);
-
-        //init others
-//        //初始化talkingData
-//        TCAgent.init(context);
-//        TCAgent.setReportUncaughtExceptions(true);
-//        //LogUtil.log("Utility.getSource(context) = " + Utility.getSource(context));
-//        TalkingDataAppCpa.init(context, Constants.TD_APP_AD_ID, Utility.getSource(context));
-//        if (BuildConfig.DEBUG) {
-//            TCAgent.LOG_ON = true;
-//        } else {
-//            TCAgent.LOG_ON = false;
-//        }
     }
 }

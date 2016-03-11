@@ -4,8 +4,8 @@ import android.content.Context;
 
 import com.androidbase.BuildConfig;
 import com.androidbase.commons.Constants;
-import com.androidbase.entity.Page;
 import com.commons.support.db.config.ConfigUtil;
+import com.commons.support.entity.Page;
 import com.commons.support.http.BaseHttpHelper;
 import com.commons.support.util.Utility;
 import com.loopj.android.http.AsyncHttpResponseHandler;

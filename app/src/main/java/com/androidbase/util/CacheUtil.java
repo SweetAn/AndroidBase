@@ -4,11 +4,10 @@ import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.androidbase.entity.Result;
 import com.commons.support.db.cache.Cache;
 import com.commons.support.db.cache.CacheDB;
 import com.commons.support.entity.JSONUtil;
-import com.commons.support.log.LogUtil;
+import com.commons.support.entity.Result;
 
 /**
  * Created by qianjin on 2015/10/1.

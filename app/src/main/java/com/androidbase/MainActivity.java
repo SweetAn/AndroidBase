@@ -24,10 +24,6 @@ public class MainActivity extends BaseNoInitDataActivity{
 //        //测试
 //        //select * from seeds where seeds.title like ‘%测试%’ limit 0,10；
 //
-//
-//
-//
-//
 //        ConfigUtil.save(new Config("test", "this is a value"));
 //        ConfigUtil.save(new Config("test1", "this is a value1"));
 //        ConfigUtil.save(new Config("test2", "this is a value2"));

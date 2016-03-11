@@ -12,7 +12,6 @@ public class MApplication extends Application {
     public void onCreate() {
         super.onCreate();
         this.context = this;
-
         AllConfig.init(this);
     }
 

@@ -3,7 +3,7 @@ package com.androidbase.view;
 import android.view.View;
 
 import com.androidbase.R;
-import com.androidbase.base.BaseNoInitDataActivity;
+import com.androidbase.base.BaseActivity;
 import com.commons.support.widget.MWebView;
 
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * Created by qianjin on 2015/10/8.
  */
-public class BrowserActivity extends BaseNoInitDataActivity {
+public class BrowserActivity extends BaseActivity {
 
     @Override
     protected void initView() {

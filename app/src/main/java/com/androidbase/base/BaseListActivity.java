@@ -1,102 +1,48 @@
 package com.androidbase.base;
 
-import android.view.View;
-import android.widget.AdapterView;
-
-import com.androidbase.R;
-import com.androidbase.adapter.base.BaseAdapter;
-import com.androidbase.entity.Page;
-import com.androidbase.entity.Result;
-import com.androidbase.widget.ptr.PtrListView;
-
+import com.androidbase.commons.Constants;
+import com.androidbase.http.HttpHelper;
+import com.androidbase.util.CountUtil;
+import com.commons.support.db.config.ConfigUtil;
 
 /**
- * Created by qianjin on 2015/10/12.
+ * Created by qianjin on 2016/1/27.
  */
-public abstract class BaseListActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+public abstract class BaseListActivity extends com.commons.support.ui.base.BaseListActivity {
 
-    public Page page;
-    public BaseAdapter adapter;
-    public PtrListView listView;
+    public HttpHelper httpHelper;
+
+
+    public boolean isLogin() {
+        return ConfigUtil.getBooleanConfigValue(Constants.LOGIN);
+    }
+
+    public String getCacheKey(String key) {
+        return getClass().getSimpleName() + "_" + key;
+    }
+
+
+    @Override
+    public void init() {
+        super.init();
+        httpHelper = HttpHelper.getInstance(context);
+    }
 
     @Override
     public void initView() {
-
-        listView = (PtrListView) findViewById(R.id.lv_list);
-
-        listView.setRefresh(new PtrListView.OnRefresh() {
-            @Override
-            public void onRefresh() {
-                if (page != null) {
-                    page.initPage();
-                }
-                request();
-            }
-        });
-        listView.setLoadMore(new PtrListView.OnLoadMore() {
-            @Override
-            public void onLoadMore() {
-                if (page.hasMore()) {
-                    getList();
-                } else {
-                    listView.loadDataComplete();
-                }
-            }
-        });
-        adapter = getAdapter();
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(this);
-
-    }
-
-
-    @Override
-    public void request() {
-        if (page == null) {
-            page = new Page<>();
-            loadingDialog.show();
-        }
-        getList();
+        super.initView();
     }
 
     @Override
-    public void requestSuccess(Result result, Class... entity) {
-        if (result.isResult()) {
-            Page resultPage = result.getPage(entity[0]);
-            if (resultPage != null) {
-                page.initPage(resultPage);
-                if (page.isRefresh()) {
-                    adapter.refresh(page.getList());
-                } else {
-                    adapter.loadMore(page.getList());
-                }
-            }
-        } else {
-            showToast(result.getMsg());
-        }
-        if (result.isRequestEnd()) {
-            requestEnd();
-        }
+    protected void onPause() {
+        super.onPause();
+        CountUtil.onPause(this);
     }
 
     @Override
-    public void requestEnd() {
-        isLoading = false;
-        if (listView != null) {
-            listView.loadDataComplete();
-        }
-        loadingDialog.dismiss();
+    protected void onResume() {
+        super.onResume();
+        CountUtil.onResume(this);
     }
 
-    protected abstract void getList();
-    protected abstract BaseAdapter getAdapter();
-
-    @Override
-    public int getViewRes() {
-        return R.layout.activity_view_list;
-    }
-
-    @Override
-    public void onClick(View v) {
-    }
 }

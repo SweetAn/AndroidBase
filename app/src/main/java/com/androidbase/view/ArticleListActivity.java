@@ -4,12 +4,9 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import com.androidbase.adapter.ArticleAdapter;
-import com.androidbase.adapter.base.BaseAdapter;
 import com.androidbase.base.BaseListActivity;
 import com.androidbase.entity.Article;
-import com.androidbase.entity.Result;
-import com.androidbase.http.HttpResultHandler;
-import com.androidbase.util.CacheUtil;
+import com.commons.support.ui.adapter.BaseAdapter;
 
 /**
  * Created by qianjin on 2015/9/29.
@@ -24,12 +21,7 @@ public class ArticleListActivity extends BaseListActivity {
 
     @Override
     protected void getList() {
-        httpHelper.getArticleList(page, new HttpResultHandler(CacheUtil.ARTICLE_LIST) {
-            @Override
-            public void onSuccess(Result result) {
-                requestSuccess(result, Article.class);
-            }
-        });
+        httpHelper.getArticleList(page, getDefaultListHandler(Article.class));
     }
 
     @Override

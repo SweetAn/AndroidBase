@@ -2,11 +2,11 @@ package com.androidbase.http;
 
 import android.text.TextUtils;
 
-import com.androidbase.entity.Result;
 import com.androidbase.util.CacheUtil;
 import com.androidbase.util.LogUtil;
 import com.commons.support.db.cache.CacheDB;
 import com.commons.support.entity.JSONUtil;
+import com.commons.support.entity.Result;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.apache.http.Header;

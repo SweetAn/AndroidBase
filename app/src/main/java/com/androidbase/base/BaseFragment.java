@@ -1,113 +1,38 @@
 package com.androidbase.base;
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.IdRes;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
-
-import com.androidbase.R;
-import com.androidbase.entity.Result;
+import com.androidbase.commons.Constants;
+import com.androidbase.http.HttpHelper;
 import com.androidbase.util.CountUtil;
-import com.androidbase.util.ToastUtil;
-import com.commons.support.util.DialogUtil;
-import com.commons.support.util.EventUtil;
+import com.commons.support.db.config.ConfigUtil;
 
-public abstract class BaseFragment extends Fragment implements IBaseView, View.OnClickListener {
+public abstract class BaseFragment extends com.commons.support.ui.base.BaseFragment {
 
-    public boolean isLoading = false;
-    public Dialog loadingDialog;
-    public Activity context;
-    private View view;
+    public HttpHelper httpHelper;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        this.context = getActivity();
-        loadingDialog = DialogUtil.createLoadingDialog(context, getString(R.string.loading));
+    public String getUserKey() {
+        return ConfigUtil.getConfigValue(Constants.KEY);
+    }
+
+    public boolean isLogin() {
+        return ConfigUtil.getBooleanConfigValue(Constants.LOGIN);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(getViewRes(), container, false);
-
-        init();
-
-        initView(view);
-        request();
-
-        return view;
-    }
-
-    public <T extends View> T $(@IdRes int id) {
-        T v = (T) view.findViewById(id);
-        if (!(v instanceof AbsListView)) {
-            v.setOnClickListener(this);
-        }
-        return v;
-    }
-
-    protected void startActivity(Class mClass) {
-        startActivity(new Intent(context, mClass));
-    }
-
-    protected void showToast(String msg) {
-        ToastUtil.showToast(context, msg);
-    }
-
-    protected boolean resultSuccess(Result result, boolean... callRequestEnd) {
-        if (!result.isResult()) {
-            showToast(result.getMsg());
-        }
-        if (callRequestEnd != null) {
-            if (result.isRequestEnd()) {
-                requestEnd();
-            }
-        }
-        return result.isResult();
-    }
-
-    protected void init() {
-    }
-
-
-    protected abstract void initView(View view);
-
-
-    public void onEvent(Object obj) {
-    }
-
-    public void onEventMainThread(Object obj) {
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        CountUtil.onPageStart(context, this.getClass().getName());
+    public void init() {
+        super.init();
+        httpHelper = HttpHelper.getInstance(context);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        CountUtil.onPageEnd(context, this.getClass().getName());
+        CountUtil.onPageEnd(context, getFragmentTitle());
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        EventUtil.register(this);
+    public void onResume() {
+        super.onResume();
+        CountUtil.onPageStart(context, getFragmentTitle());
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventUtil.unregister(this);
-    }
-
 
 }

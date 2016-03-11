@@ -9,9 +9,9 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.androidbase.R;
-import com.androidbase.adapter.base.BaseAdapter;
-import com.androidbase.adapter.base.ViewHolder;
 import com.androidbase.entity.Article;
+import com.commons.support.ui.adapter.BaseAdapter;
+import com.commons.support.ui.adapter.BaseViewHolder;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 
@@ -22,7 +22,7 @@ public class ArticleAdapter extends BaseAdapter {
     }
 
     @Override
-    protected void initData(ViewHolder viewHolder, Object obj, int position) {
+    protected void initData(BaseViewHolder viewHolder, Object obj, int position) {
 
         final Article bean = (Article) list.get(position);
         final Holder holder = (Holder) viewHolder;
@@ -53,7 +53,7 @@ public class ArticleAdapter extends BaseAdapter {
     }
 
     @Override
-    protected ViewHolder initHolder() {
+    protected BaseViewHolder initHolder() {
 
         Holder holder = new Holder();
         holder.tvTitle = $(R.id.tv_title);
@@ -65,7 +65,7 @@ public class ArticleAdapter extends BaseAdapter {
         return holder;
     }
 
-    class Holder extends ViewHolder {
+    class Holder extends BaseViewHolder {
         public TextView tvTitle;
         public TextView tvDate;
         public ImageView ivIcon;

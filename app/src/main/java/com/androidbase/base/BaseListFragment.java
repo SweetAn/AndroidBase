@@ -1,103 +1,42 @@
 package com.androidbase.base;
 
-import android.support.annotation.LayoutRes;
 import android.view.View;
-import android.widget.AdapterView;
 
-import com.androidbase.R;
-import com.androidbase.adapter.base.BaseAdapter;
-import com.androidbase.entity.Page;
-import com.androidbase.entity.Result;
-import com.androidbase.widget.ptr.PtrListView;
+import com.androidbase.http.HttpHelper;
+import com.androidbase.util.CountUtil;
 
 /**
- * Created by qianjin on 2015/10/12.
+ * Created by qianjin on 2016/1/27.
  */
-public abstract class BaseListFragment extends BaseFragment implements AdapterView.OnItemClickListener {
+public abstract class BaseListFragment extends com.commons.support.ui.base.BaseListFragment {
 
-    public Page page;
-    public BaseAdapter adapter;
-    public PtrListView listView;
+    public HttpHelper httpHelper;
 
+    public String getCacheKey(String key) {
+        return getClass().getSimpleName() + "_" + key;
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        httpHelper = HttpHelper.getInstance(context);
+    }
 
     @Override
     public void initView(View view) {
-
-        listView = (PtrListView) view.findViewById(R.id.lv_list);
-
-        listView.setRefresh(new PtrListView.OnRefresh() {
-            @Override
-            public void onRefresh() {
-                page.initPage();
-                getList();
-            }
-        });
-        listView.setLoadMore(new PtrListView.OnLoadMore() {
-            @Override
-            public void onLoadMore() {
-                if (page.hasMore()) {
-                    getList();
-                } else {
-                    listView.loadDataComplete();
-                }
-            }
-        });
-
-        adapter = getAdapter();
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(this);
-
-    }
-
-
-    @Override
-    public void request() {
-        page = new Page<>();
-        getList();
+        super.initView(view);
     }
 
     @Override
-    public void requestSuccess(Result result, Class... entity) {
-        if (result.isResult()) {
-            Page resultPage = result.getPage(entity[0]);
-            if (resultPage != null) {
-                page.initPage(resultPage);
-                if (page.isRefresh()) {
-                    adapter.refresh(page.getList());
-                } else {
-                    adapter.loadMore(page.getList());
-                }
-            }
-        } else {
-            showToast(result.getMsg());
-        }
-        if (result.isRequestEnd()) {
-            requestEnd();
-        }
-    }
-
-
-    @Override
-    public void requestEnd() {
-        isLoading = false;
-        listView.loadDataComplete();
-        loadingDialog.dismiss();
-    }
-
-    protected abstract void getList();
-
-    protected abstract BaseAdapter getAdapter();
-
-    /**
-     * 如果布局有变化，请重写此方法
-     * @return
-     */
-    @Override
-    public @LayoutRes int getViewRes() {
-        return R.layout.fragment_view_list;
+    public void onPause() {
+        super.onPause();
+        CountUtil.onPageStart(context, this.getClass().getSimpleName());
     }
 
     @Override
-    public void onClick(View v) {
+    public void onResume() {
+        super.onResume();
+        CountUtil.onPageEnd(context, this.getClass().getSimpleName());
     }
+
 }

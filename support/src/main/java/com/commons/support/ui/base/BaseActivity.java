@@ -13,11 +13,11 @@ import android.view.View;
 
 import com.commons.support.R;
 import com.commons.support.entity.Result;
-import com.commons.support.log.LogUtil;
 import com.commons.support.ui.UIHelper;
 import com.commons.support.util.BaseJava;
 import com.commons.support.util.DialogUtil;
 import com.commons.support.util.EventUtil;
+import com.commons.support.util.LogUtil;
 import com.commons.support.widget.TitleBar;
 
 import java.io.Serializable;

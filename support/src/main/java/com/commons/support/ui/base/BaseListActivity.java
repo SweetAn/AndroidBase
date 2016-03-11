@@ -59,7 +59,7 @@ public abstract class BaseListActivity extends BaseActivity implements AdapterVi
         getList();
     }
 
-    protected HttpResultHandler getDefaultListHandler(final Class... entity){
+    protected HttpResultHandler getDefaultListHandler(final Class entity){
         return new HttpResultHandler() {
             @Override
             public void onSuccess(Result result) {
@@ -69,9 +69,9 @@ public abstract class BaseListActivity extends BaseActivity implements AdapterVi
     }
 
     @Override
-    public void requestSuccess(Result result, Class... entity) {
+    public void requestSuccess(Result result, Class entity) {
         if (result.isResult()) {
-            Page resultPage = result.getPage(entity[0]);
+            Page resultPage = result.getPage(entity);
             if (resultPage != null) {
                 page.initPage(resultPage);
                 if (page.isRefresh()) {

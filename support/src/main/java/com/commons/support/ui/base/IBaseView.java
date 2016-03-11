@@ -13,7 +13,7 @@ public interface IBaseView extends View.OnClickListener{
     @LayoutRes int getViewRes();
 
     void request();
-    void requestSuccess(Result result, Class... entity);
+    void requestSuccess(Result result, Class entity);
     void requestEnd();
 
 }

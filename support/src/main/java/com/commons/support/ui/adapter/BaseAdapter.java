@@ -1,6 +1,6 @@
 package com.commons.support.ui.adapter;
 
-import android.app.Activity;
+import android.content.Context;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.view.LayoutInflater;
@@ -16,19 +16,19 @@ import java.util.List;
 public abstract class BaseAdapter extends android.widget.BaseAdapter {
 
     protected List list;
-    protected Activity activity;
+    protected Context context;
     protected View view;
 
-    public BaseAdapter(Activity activity) {
+    public BaseAdapter(Context context) {
         list = new ArrayList<>();
-        this.activity = activity;
+        this.context = context;
     }
 
     @Override
     public View getView(final int position, View view, ViewGroup group) {
         final BaseViewHolder holder;
         if (view == null) {
-            LayoutInflater inflater = LayoutInflater.from(activity);
+            LayoutInflater inflater = LayoutInflater.from(context);
             view = inflater.inflate(getViewRes(), group, false);
             this.view = view;
             holder = initHolder();
@@ -82,7 +82,10 @@ public abstract class BaseAdapter extends android.widget.BaseAdapter {
         return list.get(position);
     }
 
-
+    @Override
+    public long getItemId(int position) {
+        return 0;
+    }
 }
 
 

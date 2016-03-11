@@ -15,6 +15,7 @@ import com.commons.support.R;
 import com.commons.support.entity.Result;
 import com.commons.support.log.LogUtil;
 import com.commons.support.ui.UIHelper;
+import com.commons.support.util.BaseJava;
 import com.commons.support.util.DialogUtil;
 import com.commons.support.util.EventUtil;
 import com.commons.support.widget.TitleBar;
@@ -144,36 +145,27 @@ public abstract class BaseActivity extends Activity implements IBaseView, View.O
      * ********************Java帮助类*****************************
      */
     public boolean objectNotNull(Object object) {
-        if (object == null) {
-            return false;
-        }
-        return true;
+        return BaseJava.objectNotNull(object);
     }
 
     public boolean objectIsNull(Object object) {
-        return !objectNotNull(object);
+        return BaseJava.objectIsNull(object);
     }
 
     public boolean strNotEmpty(String str) {
-        if (objectIsNull(str) || str.length() == 0) {
-            return false;
-        }
-        return true;
+        return BaseJava.strNotEmpty(str);
     }
 
     public boolean strIsEmpty(String str) {
-        return !strNotEmpty(str);
+        return BaseJava.strIsEmpty(str);
     }
 
     public boolean listNotEmpty(List list) {
-        if (objectIsNull(list) || list.size() == 0) {
-            return false;
-        }
-        return true;
+        return BaseJava.listNotEmpty(list);
     }
 
     public boolean listIsEmpty(List list) {
-        return !listNotEmpty(list);
+        return BaseJava.listIsEmpty(list);
     }
 
     /**

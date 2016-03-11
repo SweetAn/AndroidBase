@@ -1,4 +1,4 @@
-package com.commons.support.log;
+package com.commons.support.util;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.commons.support.BuildConfig;
-import com.commons.support.util.DirUtil;
 
 import java.io.File;
 import java.io.FileWriter;

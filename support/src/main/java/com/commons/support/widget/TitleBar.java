@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.commons.support.R;
-import com.commons.support.log.LogUtil;
+import com.commons.support.util.LogUtil;
 
 
 /**

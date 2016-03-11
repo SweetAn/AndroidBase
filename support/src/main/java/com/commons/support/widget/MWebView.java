@@ -18,8 +18,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.commons.support.R;
-import com.commons.support.log.LogUtil;
 import com.commons.support.util.ConnectUtil;
+import com.commons.support.util.LogUtil;
 
 import java.util.Map;
 

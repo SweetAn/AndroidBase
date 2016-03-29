@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.androidbase.R;
 import com.androidbase.entity.Article;
+import com.commons.support.entity.BaseEntity;
 import com.commons.support.ui.adapter.BaseAdapter;
 import com.commons.support.ui.adapter.BaseViewHolder;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -21,11 +22,12 @@ public class ArticleAdapter extends BaseAdapter {
         super(context);
     }
 
-    @Override
-    protected void initData(BaseViewHolder viewHolder, Object obj, int position) {
 
-        final Article bean = (Article) list.get(position);
-        final Holder holder = (Holder) viewHolder;
+    @Override
+    protected void initData(BaseViewHolder viewHolder, BaseEntity entity, int position) {
+
+        final Article bean = entity.getEntity();
+        final Holder holder =  viewHolder.getHolder();
 
         holder.tvTitle.setText(bean.getTitle());
 

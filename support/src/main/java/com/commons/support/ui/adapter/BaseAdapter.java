@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.commons.support.entity.BaseEntity;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +17,7 @@ import java.util.List;
  */
 public abstract class BaseAdapter extends android.widget.BaseAdapter {
 
-    protected List list;
+    protected List<BaseEntity> list;
     protected Context context;
     protected View view;
 
@@ -48,7 +50,7 @@ public abstract class BaseAdapter extends android.widget.BaseAdapter {
         return (T) view.findViewById(id);
     }
 
-    protected abstract void initData(BaseViewHolder baseViewHolder, Object obj, final int position);
+    protected abstract void initData(BaseViewHolder baseViewHolder, BaseEntity entity, final int position);
 
     protected abstract
     @LayoutRes
@@ -56,8 +58,8 @@ public abstract class BaseAdapter extends android.widget.BaseAdapter {
 
     protected abstract BaseViewHolder initHolder();
 
-    public void refresh(int position, Object obj) {
-        this.list.set(position, obj);
+    public void refresh(int position, BaseEntity entity) {
+        this.list.set(position, entity);
         notifyDataSetChanged();
     }
 

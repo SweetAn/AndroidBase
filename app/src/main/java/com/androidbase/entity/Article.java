@@ -1,12 +1,12 @@
 package com.androidbase.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.commons.support.entity.BaseEntity;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class Article implements Serializable {
+public class Article extends BaseEntity {
 
 
 
